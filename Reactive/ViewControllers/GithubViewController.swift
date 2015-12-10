@@ -20,8 +20,7 @@ class GithubViewController: UIViewController {
         validationService: GitHubDefaultValidationService.sharedValidationService
     )
     
-    let racViewModel = GithubRACViewModel(API: GitHubDefaultAPI.sharedAPI,
-        validationService: GitHubRACDefaultValidationService())
+    let racViewModel = GithubRACViewModel(validationService: GitHubRACDefaultValidationService())
     
     var disposeBag = DisposeBag()
     
@@ -182,6 +181,14 @@ class GithubViewController: UIViewController {
         rxViewModel.signedIn
             .subscribeNext { signedIn in
                 print("User signed in \(signedIn)")
+                let message = signedIn ? "Mock: Signed in to GitHub." : "Mock: Sign in to GitHub failed"
+                let alertView = UIAlertView(
+                    title: "RxExample",
+                    message: message,
+                    delegate: nil,
+                    cancelButtonTitle: "OK"
+                )
+                alertView.show()
             }
             .addDisposableTo(disposeBag)
         //}

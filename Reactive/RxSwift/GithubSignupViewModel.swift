@@ -76,14 +76,6 @@ class GithubSignupViewModel {
                     .catchErrorJustReturn(false)
                     .trackActivity(signingIn)
             }
-            .flatMapLatest { loggedIn -> Observable<Bool> in
-                let message = loggedIn ? "Mock: Signed in to GitHub." : "Mock: Sign in to GitHub failed"
-                return Wireframe().promptFor(message, cancelAction: "OK", actions: [])
-                    // propagate original value
-                    .map { _ in
-                        loggedIn
-                    }
-            }
             .shareReplay(1)
         
         signupEnabled = combineLatest(
@@ -98,47 +90,6 @@ class GithubSignupViewModel {
                 !signingIn
             }
             .shareReplay(1)
-    }
-}
-
-class Wireframe {
-    func promptFor<Action : CustomStringConvertible>(message: String, cancelAction: Action, actions: [Action]) -> Observable<Action> {
-        #if os(iOS)
-            return create { observer in
-                let alertView = UIAlertView(
-                    title: "RxExample",
-                    message: message,
-                    delegate: nil,
-                    cancelButtonTitle: cancelAction.description
-                )
-                
-                for action in actions {
-                    alertView.addButtonWithTitle(action.description)
-                }
-                
-                alertView.show()
-                
-                observer.on(.Next(alertView))
-                
-                return AnonymousDisposable {
-                    alertView.dismissWithClickedButtonIndex(-1, animated: true)
-                }
-                }.flatMap { (alertView: UIAlertView) -> Observable<Action> in
-                    return alertView.rx_didDismissWithButtonIndex.flatMap { index -> Observable<Action> in
-                        if index < 0 {
-                            return empty()
-                        }
-                        
-                        if index == 0 {
-                            return just(cancelAction)
-                        }
-                        
-                        return just(actions[index - 1])
-                    }
-            }
-        #elseif os(OSX)
-            return failWith(NSError(domain: "Unimplemented", code: -1, userInfo: nil))
-        #endif
     }
 }
 

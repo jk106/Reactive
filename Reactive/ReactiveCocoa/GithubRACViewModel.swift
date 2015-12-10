@@ -11,7 +11,6 @@ import ReactiveCocoa
 
 class GithubRACViewModel {
     
-    private let API: GitHubAPI
     private let validationService: GitHubRACValidationService
     
     // inputs {
@@ -42,9 +41,6 @@ class GithubRACViewModel {
                         })
                     }
                 }
-                .concat(SignalProducer.never)
-                .throttle(2, onScheduler: QueueScheduler.mainQueueScheduler)
-                .take(1)
                 .on(started:{
                     _ in self.signingIn.value = true
                     self.signedUpEnabled.value = false;
@@ -76,8 +72,7 @@ class GithubRACViewModel {
     let signedUpEnabled = MutableProperty<Bool>(false)
     let signedIn = MutableProperty<Bool>(false)
     
-    init(API: GitHubAPI, validationService: GitHubRACValidationService) {
-        self.API = API
+    init(validationService: GitHubRACValidationService) {
         self.validationService = validationService
         self.password.producer.map
             {
