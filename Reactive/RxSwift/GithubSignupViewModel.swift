@@ -14,8 +14,7 @@ class GithubSignupViewModel {
 
     private let API: GitHubAPI
     private let validationService: GitHubValidationService
-    private let wireframe: Wireframe
-
+    
     // inputs {
 
     let username = Variable("")
@@ -44,10 +43,9 @@ class GithubSignupViewModel {
 
     // }
 
-    init(API: GitHubAPI, validationService: GitHubValidationService, wireframe: Wireframe) {
+    init(API: GitHubAPI, validationService: GitHubValidationService) {
         self.API = API
         self.validationService = validationService
-        self.wireframe = wireframe
 
         validatedUsername = username
             .flatMapLatest { username in
@@ -80,7 +78,7 @@ class GithubSignupViewModel {
             }
             .flatMapLatest { loggedIn -> Observable<Bool> in
                 let message = loggedIn ? "Mock: Signed in to GitHub." : "Mock: Sign in to GitHub failed"
-                return wireframe.promptFor(message, cancelAction: "OK", actions: [])
+                return Wireframe().promptFor(message, cancelAction: "OK", actions: [])
                     // propagate original value
                     .map { _ in
                         loggedIn
@@ -100,5 +98,118 @@ class GithubSignupViewModel {
                 !signingIn
             }
             .shareReplay(1)
+    }
+}
+
+class Wireframe {
+    func promptFor<Action : CustomStringConvertible>(message: String, cancelAction: Action, actions: [Action]) -> Observable<Action> {
+        #if os(iOS)
+            return create { observer in
+                let alertView = UIAlertView(
+                    title: "RxExample",
+                    message: message,
+                    delegate: nil,
+                    cancelButtonTitle: cancelAction.description
+                )
+                
+                for action in actions {
+                    alertView.addButtonWithTitle(action.description)
+                }
+                
+                alertView.show()
+                
+                observer.on(.Next(alertView))
+                
+                return AnonymousDisposable {
+                    alertView.dismissWithClickedButtonIndex(-1, animated: true)
+                }
+                }.flatMap { (alertView: UIAlertView) -> Observable<Action> in
+                    return alertView.rx_didDismissWithButtonIndex.flatMap { index -> Observable<Action> in
+                        if index < 0 {
+                            return empty()
+                        }
+                        
+                        if index == 0 {
+                            return just(cancelAction)
+                        }
+                        
+                        return just(actions[index - 1])
+                    }
+            }
+        #elseif os(OSX)
+            return failWith(NSError(domain: "Unimplemented", code: -1, userInfo: nil))
+        #endif
+    }
+}
+
+struct ActivityToken<E> : ObservableConvertibleType, Disposable {
+    private let _source: Observable<E>
+    private let _dispose: AnonymousDisposable
+    
+    init(source: Observable<E>, disposeAction: () -> ()) {
+        _source = source
+        _dispose = AnonymousDisposable(disposeAction)
+    }
+    
+    func dispose() {
+        _dispose.dispose()
+    }
+    
+    func asObservable() -> Observable<E> {
+        return _source
+    }
+}
+
+/**
+ Enables monitoring of sequence computation.
+ 
+ If there is at least one sequence computation in progress, `true` will be sent.
+ When all activities complete `false` will be sent.
+ */
+class ActivityIndicator : DriverConvertibleType {
+    typealias E = Bool
+    
+    private let _lock = NSRecursiveLock()
+    private let _variable = Variable(0)
+    private let _loading: Driver<Bool>
+    
+    init() {
+        _loading = _variable
+            .map { $0 > 0 }
+            .asDriver { (error: ErrorType) -> Driver<Bool> in
+                _ = fatalError("Loader can't fail")
+                return Drive.empty()
+        }
+    }
+    
+    func trackActivity<O: ObservableConvertibleType>(source: O) -> Observable<O.E> {
+        return using({ () -> ActivityToken<O.E> in
+            self.increment()
+            return ActivityToken(source: source.asObservable(), disposeAction: self.decrement)
+            }) { t in
+                return t.asObservable()
+        }
+    }
+    
+    private func increment() {
+        _lock.lock()
+        _variable.value = _variable.value + 1
+        _lock.unlock()
+    }
+    
+    private func decrement() {
+        _lock.lock()
+        _variable.value = _variable.value - 1
+        _lock.unlock()
+    }
+    
+    func asDriver() -> Driver<E> {
+        return _loading
+    }
+}
+
+extension ObservableConvertibleType {
+    func trackActivity(activityIndicator: ActivityIndicator) -> Observable<E> {
+        return activityIndicator.trackActivity(self)
     }
 }

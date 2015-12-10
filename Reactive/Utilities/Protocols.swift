@@ -32,6 +32,11 @@ protocol GitHubValidationService {
     func validateRepeatedPassword(password: String, repeatedPassword: String) -> ValidationResult
 }
 
+protocol GitHubRACValidationService {
+    func validatePassword(password: String) -> ValidationResult
+    func validateRepeatedPassword(password: String, repeatedPassword: String) -> ValidationResult
+}
+
 extension ValidationResult {
     var isValid: Bool {
         switch self {

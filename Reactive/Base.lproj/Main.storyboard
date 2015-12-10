@@ -201,6 +201,16 @@
                             <constraint firstItem="T7g-h2-kEi" firstAttribute="top" secondItem="IcH-Sl-BWY" secondAttribute="bottom" constant="8" id="ssG-JR-fep"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="passwordOutlet" destination="pNk-Bg-MBg" id="AXB-m8-oJA"/>
+                        <outlet property="passwordValidationOutlet" destination="IcH-Sl-BWY" id="At2-oe-oxH"/>
+                        <outlet property="repeatedPasswordOutlet" destination="T7g-h2-kEi" id="CkG-Mu-gKb"/>
+                        <outlet property="repeatedPasswordValidationOutlet" destination="OjS-CW-ss6" id="Zg2-z3-obF"/>
+                        <outlet property="signingUpOulet" destination="GjW-I5-fNs" id="ed3-1o-gMv"/>
+                        <outlet property="signupOutlet" destination="4Wt-BN-C8P" id="ZWE-AX-cPM"/>
+                        <outlet property="usernameOutlet" destination="Eps-tz-pkr" id="i0E-Va-sIO"/>
+                        <outlet property="usernameValidationOutlet" destination="3tQ-zK-mNt" id="QeV-HS-Gxg"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gBj-mA-HFk" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

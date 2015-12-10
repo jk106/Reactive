@@ -99,6 +99,10 @@ class GitHubDefaultAPI : GitHubAPI {
             .catchErrorJustReturn(false)
     }
     
+    func URLEscape(pathSegment: String) -> String {
+        return pathSegment.stringByAddingPercentEncodingWithAllowedCharacters(.URLHostAllowedCharacterSet())!
+    }
+    
     func signup(username: String, password: String) -> Observable<Bool> {
         // this is also just a mock
         let signupResult = arc4random() % 5 == 0 ? false : true

@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 import RxSwift
 import RxCocoa
+import ReactiveCocoa
 
 extension ValidationResult: CustomStringConvertible {
     var description: String {
@@ -54,7 +55,7 @@ extension UILabel {
                 self?.textColor = result.textColor
                 self?.text = result.description
             case let .Error(error):
-                bindingErrorToInterface(error)
+                print(error)
             case .Completed:
                 break
             }
