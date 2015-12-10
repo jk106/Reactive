@@ -22,6 +22,7 @@ class GithubRACViewModel {
     lazy var loginTaps:Action<Void, Bool, NSError> = { [unowned self] in
         return Action(enabledIf: self.signedUpEnabled, { _ in
             let signupResult = arc4random() % 5 == 0 ? false : true
+            print("\(self.password.value), \(self.username.value)")
             let sp = SignalProducer<Bool, NSError>
                 {
                     sink, disposable in
