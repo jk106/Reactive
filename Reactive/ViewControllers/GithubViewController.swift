@@ -25,6 +25,8 @@ class GithubViewController: UIViewController {
     
     var disposeBag = DisposeBag()
     
+    var signupAction:CocoaAction!
+    
     @IBOutlet weak var usernameOutlet: UITextField!
     @IBOutlet weak var usernameValidationOutlet: UILabel!
     
@@ -61,12 +63,75 @@ class GithubViewController: UIViewController {
     func loadRAC()
     {
         racViewModel.password <~ passwordOutlet.rac_text
-        passwordValidationOutlet.rac_text <~ racViewModel.validPassword
-        passwordValidationOutlet.rac_text_color <~ racViewModel.validPasswordColor
+        racViewModel.validPassword.producer.start(passwordValidationOutlet.rac_validationResult)
         
         racViewModel.repeatedPassword <~ repeatedPasswordOutlet.rac_text
-        repeatedPasswordValidationOutlet.rac_text <~ racViewModel.validRepeat
-        repeatedPasswordValidationOutlet.rac_text_color <~ racViewModel.validRepeatColor
+        racViewModel.validRepeat.producer.start(repeatedPasswordValidationOutlet.rac_validationResult)
+        
+        racViewModel.username <~ usernameOutlet.rac_text
+        racViewModel.validUsername.producer.start(usernameValidationOutlet.rac_validationResult)
+        
+        racViewModel.signedUpEnabled.producer.start(Observer { [weak self] event in
+            switch event {
+            case let .Next(result):
+                self?.signupOutlet.enabled = result
+                self?.signupOutlet.alpha = result ? 1.0 : 0.5
+            case let .Failed(error):
+                print(error)
+            default:
+                break
+            }})
+        
+        racViewModel.signingIn.producer.start(Observer { [weak self] event in
+            switch event {
+            case let .Next(result):
+                if (result)
+                {
+                    self?.signingUpOulet.startAnimating()
+                }
+                else
+                {
+                    self?.signingUpOulet.stopAnimating()
+                }
+            case let .Failed(error):
+                print(error)
+            default:
+                break
+            }})
+        self.signupAction = CocoaAction(racViewModel.loginTaps, { _ in return () })
+        signupOutlet.addTarget(signupAction, action: CocoaAction.selector, forControlEvents: UIControlEvents.TouchUpInside)
+        racViewModel.signedIn.producer.start(Observer { event in
+            switch event {
+            case let .Next(result):
+                print("User signed in \(result)")
+            default:
+                break
+            }
+            
+            })
+        racViewModel.loginTaps.values.observeOn(UIScheduler()).observeNext
+            {_ in 
+                let alertView = UIAlertView(
+                    title: "RxExample",
+                    message: "Mock: Signed in to GitHub.",
+                    delegate: nil,
+                    cancelButtonTitle: "OK"
+                )
+                
+                alertView.show()
+        }
+        
+        racViewModel.loginTaps.errors.observeOn(UIScheduler()).observeNext
+            {_ in
+                let alertView = UIAlertView(
+                    title: "RxExample",
+                    message: "Mock: Sign in to GitHub failed",
+                    delegate: nil,
+                    cancelButtonTitle: "OK"
+                )
+                
+                alertView.show()
+        }
     }
     
     func loadRx()

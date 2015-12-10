@@ -46,6 +46,7 @@ extension UIView {
     public var rac_hidden: MutableProperty<Bool> {
         return lazyMutableProperty(self, key: &AssociationKey.hidden, setter: { self.hidden = $0 }, getter: { self.hidden  })
     }
+    
 }
 
 extension UILabel {
@@ -53,8 +54,18 @@ extension UILabel {
         return lazyMutableProperty(self, key: &AssociationKey.text, setter: { self.text = $0 }, getter: { self.text ?? "" })
     }
     
-    public var rac_text_color: MutableProperty<UIColor> {
-        return lazyMutableProperty(self, key: &AssociationKey.hidden, setter: { self.textColor = $0 }, getter: { self.textColor  })
+    var rac_validationResult: Observer<ValidationResult, NoError> {
+        return Observer { [weak self] event in
+            switch event {
+            case let .Next(result):
+                self?.textColor = result.textColor
+                self?.text = result.description
+            case let .Failed(error):
+                print(error)
+            default:
+                break
+            }
+        }
     }
 }
 

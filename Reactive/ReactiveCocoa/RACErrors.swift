@@ -11,6 +11,7 @@ import Foundation
 enum GithubError: Int {
     case InvalidUser = 0,
     InvalidPassword,
+    APIError,
     PasswordMismatch,
     NoError
     
