@@ -63,9 +63,9 @@
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qoo-OS-at3">
                                 <rect key="frame" x="30" y="304" width="540" height="30"/>
-                                <state key="normal" title="Swift Bond"/>
+                                <state key="normal" title="ReactiveKit"/>
                                 <connections>
-                                    <segue destination="LY7-Ef-ICJ" kind="show" identifier="Swift Bond" id="gUj-bD-39Q"/>
+                                    <segue destination="LY7-Ef-ICJ" kind="show" identifier="ReactiveKit" id="gUj-bD-39Q"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -218,6 +218,6 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="k0t-sN-SRu"/>
+        <segue reference="gUj-bD-39Q"/>
     </inferredMetricsTieBreakers>
 </document>

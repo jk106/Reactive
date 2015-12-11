@@ -8,8 +8,11 @@ pod 'ReactiveCocoa', '4.0.4-alpha-4'
 pod 'RxSwift', '~> 2.0.0-beta'
 pod 'RxCocoa', '~> 2.0.0-beta'
 pod 'RxBlocking', '~> 2.0.0-beta'
-pod 'Bond', '~> 4.0'
+pod 'ReactiveKit', '~> 1.0'
+pod 'ReactiveUIKit', '~> 1.0'
+pod 'ReactiveFoundation', '~> 1.0'
 pod 'Interstellar'
+pod 'Alamofire'
 end
 
 target 'ReactiveTests' do

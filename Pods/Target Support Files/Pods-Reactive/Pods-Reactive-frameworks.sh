@@ -84,18 +84,24 @@ strip_invalid_archs() {
 
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
-  install_framework "Pods-Reactive/Bond.framework"
+  install_framework "Pods-Reactive/Alamofire.framework"
   install_framework "Pods-Reactive/Interstellar.framework"
   install_framework "Pods-Reactive/ReactiveCocoa.framework"
+  install_framework "Pods-Reactive/ReactiveFoundation.framework"
+  install_framework "Pods-Reactive/ReactiveKit.framework"
+  install_framework "Pods-Reactive/ReactiveUIKit.framework"
   install_framework "Pods-Reactive/Result.framework"
   install_framework "Pods-Reactive/RxBlocking.framework"
   install_framework "Pods-Reactive/RxCocoa.framework"
   install_framework "Pods-Reactive/RxSwift.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
-  install_framework "Pods-Reactive/Bond.framework"
+  install_framework "Pods-Reactive/Alamofire.framework"
   install_framework "Pods-Reactive/Interstellar.framework"
   install_framework "Pods-Reactive/ReactiveCocoa.framework"
+  install_framework "Pods-Reactive/ReactiveFoundation.framework"
+  install_framework "Pods-Reactive/ReactiveKit.framework"
+  install_framework "Pods-Reactive/ReactiveUIKit.framework"
   install_framework "Pods-Reactive/Result.framework"
   install_framework "Pods-Reactive/RxBlocking.framework"
   install_framework "Pods-Reactive/RxCocoa.framework"

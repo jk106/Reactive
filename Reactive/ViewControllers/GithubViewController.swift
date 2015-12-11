@@ -11,6 +11,8 @@ import UIKit
 import RxSwift
 import RxCocoa
 import ReactiveCocoa
+import ReactiveUIKit
+import ReactiveKit
 
 class GithubViewController: UIViewController {
     
@@ -22,7 +24,9 @@ class GithubViewController: UIViewController {
     
     let racViewModel = GithubRACViewModel(validationService: GitHubRACDefaultValidationService())
     
-    var disposeBag = DisposeBag()
+    let rkViewModel = GithubRKViewModel(validationService: GitHubRACDefaultValidationService())
+    
+    var disposeBag = RxSwift.DisposeBag()
     
     var signupAction:CocoaAction!
     
@@ -48,7 +52,7 @@ class GithubViewController: UIViewController {
         case 3:
             print(self.title)
         default:
-            print(self.title)
+            loadRK()
         }
         let tapBackground = UITapGestureRecognizer(target: self, action: Selector("dismissKeyboard:"))
         view.addGestureRecognizer(tapBackground)
@@ -57,6 +61,41 @@ class GithubViewController: UIViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func loadRK()
+    {
+        passwordOutlet.rText.bindTo(rkViewModel.password)
+        rkViewModel.validPassword.bindTo(passwordValidationOutlet.rValidationResult)
+        
+        repeatedPasswordOutlet.rText.bindTo(rkViewModel.repeatedPassword)
+        rkViewModel.validRepeat.bindTo(repeatedPasswordValidationOutlet.rValidationResult)
+        
+        usernameOutlet.rText.throttle(0.5, on: Queue.main).bindTo(rkViewModel.username)
+        rkViewModel.validUsername.bindTo(usernameValidationOutlet.rValidationResult)
+        
+        rkViewModel.signupEnabled.observe
+            {
+                enabled in
+                self.signupOutlet.enabled = enabled
+                self.signupOutlet.alpha = enabled ? 1.0 : 0.5
+        }
+        
+        rkViewModel.signingIn.bindTo(signingUpOulet.rAnimating)
+        signupOutlet.rTap.bindTo(rkViewModel.loginTaps)
+        rkViewModel.signedIn.skip(1).observe
+            {
+                result in
+                print("User signed in \(result)")
+                let message = result ? "Mock: Signed in to GitHub." : "Mock: Sign in to GitHub failed"
+                let alertView = UIAlertView(
+                    title: "RxExample",
+                    message: message,
+                    delegate: nil,
+                    cancelButtonTitle: "OK"
+                )
+                alertView.show()
+        }
     }
     
     func loadRAC()

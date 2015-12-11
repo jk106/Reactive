@@ -4,7 +4,7 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>Bond.xcscheme</key>
+		<key>Alamofire.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
@@ -20,6 +20,21 @@
 			<false/>
 		</dict>
 		<key>ReactiveCocoa.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>ReactiveFoundation.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>ReactiveKit.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>ReactiveUIKit.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
@@ -47,32 +62,32 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>20E9076881AF523751AE53CA959EE6AD</key>
+		<key>21D90024A80E6961407F19D28B5C1ACD</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>41A8429CC07E9921174BC2DD35A3E598</key>
+		<key>2D14BDA0272D9562B6DA7E3E2DFEE059</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>46452B6AC2069A37A4A206F6E2C00E94</key>
+		<key>3AC043B4120AF6232F75E2BBE2A32757</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>6AB155CD10B90FF5A6241A37CDB9B846</key>
+		<key>432ECC54282C84882B482CCB4CF227FC</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>80076C510C29F960587E43C0597ECBD5</key>
+		<key>4AC96B85CB7661A3EE0A03C47143FC32</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>BCCA01F038EB926E642FFC5C16612451</key>
+		<key>67580FDCE15BBE9560BBB2A3475F2B90</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -82,7 +97,22 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>EA20E699DCE013CF0895297813A6ECFE</key>
+		<key>DF7D2CB404E41560B49AE90209E5A7DF</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>E0046F4F4FC007FEBCE97137CCC56317</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>F83675CC65BBB45D3B007F9A000D1E19</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>FB0AD6CEFCC036CB6C37B5BF0492F9E3</key>
 		<dict>
 			<key>primary</key>
 			<true/>
