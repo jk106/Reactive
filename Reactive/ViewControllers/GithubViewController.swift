@@ -29,6 +29,7 @@ class GithubViewController: UIViewController {
     var disposeBag = RxSwift.DisposeBag()
     
     var signupAction:CocoaAction!
+    var bindingHelper: TableViewBindingHelper<NSDate>!
     
     @IBOutlet weak var usernameOutlet: UITextField!
     @IBOutlet weak var usernameValidationOutlet: UILabel!
@@ -41,6 +42,8 @@ class GithubViewController: UIViewController {
     
     @IBOutlet weak var signupOutlet: UIButton!
     @IBOutlet weak var signingUpOulet: UIActivityIndicatorView!
+    
+    @IBOutlet weak var tableView: UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -95,6 +98,15 @@ class GithubViewController: UIViewController {
                     cancelButtonTitle: "OK"
                 )
                 alertView.show()
+        }
+        rkViewModel.dates.bindTo(tableView){ indexPath, dates, tableView in
+            let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as UITableViewCell
+            let row = indexPath.row
+            let formatter = NSDateFormatter()
+            formatter.dateStyle = NSDateFormatterStyle.LongStyle
+            formatter.timeStyle = .MediumStyle
+            cell.textLabel?.text = formatter.stringFromDate(dates[row])
+            return cell
         }
     }
     
@@ -170,6 +182,7 @@ class GithubViewController: UIViewController {
                 
                 alertView.show()
         }
+        bindingHelper = TableViewBindingHelper(tableView: tableView, sourceSignal: self.racViewModel.dates.producer)
     }
     
     func loadRx()
@@ -220,6 +233,9 @@ class GithubViewController: UIViewController {
         rxViewModel.signedIn
             .subscribeNext { signedIn in
                 print("User signed in \(signedIn)")
+                if(signedIn){
+                    self.rxViewModel.dates.value.append(NSDate())
+                }
                 let message = signedIn ? "Mock: Signed in to GitHub." : "Mock: Sign in to GitHub failed"
                 let alertView = UIAlertView(
                     title: "RxExample",
@@ -231,6 +247,12 @@ class GithubViewController: UIViewController {
             }
             .addDisposableTo(disposeBag)
         //}
+        rxViewModel.dates.bindTo(tableView.rx_itemsWithCellIdentifier("Cell")){ (row, element, cell) in
+            let formatter = NSDateFormatter()
+            formatter.dateStyle = NSDateFormatterStyle.LongStyle
+            formatter.timeStyle = .MediumStyle
+            cell.textLabel?.text = formatter.stringFromDate(element)
+        }.addDisposableTo(disposeBag)
     }
     
     func dismissKeyboard(gr: UITapGestureRecognizer) {

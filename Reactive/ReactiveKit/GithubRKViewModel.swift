@@ -30,7 +30,10 @@ class GithubRKViewModel {
     let signingIn = Observable(false)
     let signedIn = Observable(false)
     
+    var dates = ObservableCollection([NSDate()])
+    
     init(validationService: GitHubRACValidationService) {
+        self.dates.removeLast()
         self.validationService = validationService
         self.password.map{
             password in
@@ -62,7 +65,7 @@ class GithubRKViewModel {
                 result in
                 self.signupEnabled.value = result
         }
-        self.loginTaps.skip(1).zipWith(self.username.skip(1)).zipWith(self.password).observe{
+        self.loginTaps.skip(1).combineLatestWith(self.username.skip(1)).zipWith(self.password).observe{
             username, password in
             self.signingIn.value = true
             self.signupEnabled.value = false
@@ -74,6 +77,9 @@ class GithubRKViewModel {
                     self.signedIn.value = result
                     self.signingIn.value = false
                     self.signupEnabled.value = true
+                    if(result){
+                        self.dates.append(NSDate())
+                    }
                 default:
                     self.signingIn.value = false
                     self.signupEnabled.value = true

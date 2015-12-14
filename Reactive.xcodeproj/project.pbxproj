@@ -24,6 +24,7 @@
 		1A48B6511C19E6B20016EED6 /* UIKitExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A48B6501C19E6B20016EED6 /* UIKitExtensions.swift */; };
 		1A48B6541C19E8590016EED6 /* Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A48B6531C19E8590016EED6 /* Protocols.swift */; };
 		1A48B6561C19E8FB0016EED6 /* RACImplementations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A48B6551C19E8FB0016EED6 /* RACImplementations.swift */; };
+		1A5E480A1C1F2697000B9362 /* TableViewBindingHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A5E48091C1F2697000B9362 /* TableViewBindingHelper.swift */; };
 		1AF69D571C1B055400DF2129 /* GithubRKViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AF69D561C1B055400DF2129 /* GithubRKViewModel.swift */; };
 		1AF69D971C1B111300DF2129 /* RKExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AF69D961C1B111300DF2129 /* RKExtensions.swift */; };
 /* End PBXBuildFile section */
@@ -69,6 +70,7 @@
 		1A48B6501C19E6B20016EED6 /* UIKitExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UIKitExtensions.swift; path = ReactiveCocoa/UIKitExtensions.swift; sourceTree = "<group>"; };
 		1A48B6531C19E8590016EED6 /* Protocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Protocols.swift; path = Utilities/Protocols.swift; sourceTree = "<group>"; };
 		1A48B6551C19E8FB0016EED6 /* RACImplementations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RACImplementations.swift; path = ReactiveCocoa/RACImplementations.swift; sourceTree = "<group>"; };
+		1A5E48091C1F2697000B9362 /* TableViewBindingHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TableViewBindingHelper.swift; path = ReactiveCocoa/TableViewBindingHelper.swift; sourceTree = "<group>"; };
 		1AF69D561C1B055400DF2129 /* GithubRKViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GithubRKViewModel.swift; path = ReactiveKit/GithubRKViewModel.swift; sourceTree = "<group>"; };
 		1AF69D961C1B111300DF2129 /* RKExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RKExtensions.swift; path = ReactiveKit/RKExtensions.swift; sourceTree = "<group>"; };
 		451A938254BD63C5F62283C3 /* Pods-Reactive.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Reactive.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Reactive/Pods-Reactive.debug.xcconfig"; sourceTree = "<group>"; };
@@ -180,6 +182,7 @@
 		1A48B6471C19D4350016EED6 /* ReactiveCocoa */ = {
 			isa = PBXGroup;
 			children = (
+				1A5E48091C1F2697000B9362 /* TableViewBindingHelper.swift */,
 				1A48B6501C19E6B20016EED6 /* UIKitExtensions.swift */,
 				1A48B6481C19D4730016EED6 /* GithubRACViewModel.swift */,
 				1A48B64A1C19DAA10016EED6 /* RACErrors.swift */,
@@ -409,6 +412,7 @@
 				1A48B63A1C19C7C60016EED6 /* GithubViewController.swift in Sources */,
 				1AF69D571C1B055400DF2129 /* GithubRKViewModel.swift in Sources */,
 				1A48B60A1C19C5560016EED6 /* AppDelegate.swift in Sources */,
+				1A5E480A1C1F2697000B9362 /* TableViewBindingHelper.swift in Sources */,
 				1A48B6441C19CB590016EED6 /* GithubSignupViewModel.swift in Sources */,
 				1A48B64B1C19DAA10016EED6 /* RACErrors.swift in Sources */,
 				1A48B6541C19E8590016EED6 /* Protocols.swift in Sources */,

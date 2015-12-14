@@ -50,6 +50,7 @@ class GithubRACViewModel {
                     {
                         _ in self.signingIn.value = false
                         self.signedUpEnabled.value = true;
+                        self.dates.value.append(NSDate())
                     },
                     next:
                     {
@@ -72,6 +73,8 @@ class GithubRACViewModel {
     let signingIn = MutableProperty<Bool>(false)
     let signedUpEnabled = MutableProperty<Bool>(false)
     let signedIn = MutableProperty<Bool>(false)
+    
+    let dates = MutableProperty<[NSDate]>([NSDate]())
     
     init(validationService: GitHubRACValidationService) {
         self.validationService = validationService

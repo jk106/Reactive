@@ -42,6 +42,8 @@ class GithubSignupViewModel {
     let signingIn: Observable<Bool>
 
     // }
+    
+    let dates = Variable([NSDate]())
 
     init(API: GitHubAPI, validationService: GitHubValidationService) {
         self.API = API
