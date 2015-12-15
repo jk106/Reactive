@@ -132,7 +132,18 @@ class GithubViewController: UIViewController {
                 break
             }})
         
-        racViewModel.signingIn.producer.start(Observer { [weak self] event in
+        self.signupAction = CocoaAction(racViewModel.loginTaps, { _ in return () })
+        signupOutlet.addTarget(signupAction, action: CocoaAction.selector, forControlEvents: UIControlEvents.TouchUpInside)
+        racViewModel.signedIn.producer.start(Observer { event in
+            switch event {
+            case let .Next(result):
+                print("User signed in \(result)")
+            default:
+                break
+            }
+            
+            })
+        racViewModel.loginTaps.executing.producer.start(Observer { [weak self] event in
             switch event {
             case let .Next(result):
                 if (result)
@@ -148,19 +159,8 @@ class GithubViewController: UIViewController {
             default:
                 break
             }})
-        self.signupAction = CocoaAction(racViewModel.loginTaps, { _ in return () })
-        signupOutlet.addTarget(signupAction, action: CocoaAction.selector, forControlEvents: UIControlEvents.TouchUpInside)
-        racViewModel.signedIn.producer.start(Observer { event in
-            switch event {
-            case let .Next(result):
-                print("User signed in \(result)")
-            default:
-                break
-            }
-            
-            })
         racViewModel.loginTaps.values.observeOn(UIScheduler()).observeNext
-            {_ in 
+            {_ in
                 let alertView = UIAlertView(
                     title: "RxExample",
                     message: "Mock: Signed in to GitHub.",
@@ -252,7 +252,7 @@ class GithubViewController: UIViewController {
             formatter.dateStyle = NSDateFormatterStyle.LongStyle
             formatter.timeStyle = .MediumStyle
             cell.textLabel?.text = formatter.stringFromDate(element)
-        }.addDisposableTo(disposeBag)
+            }.addDisposableTo(disposeBag)
     }
     
     func dismissKeyboard(gr: UITapGestureRecognizer) {

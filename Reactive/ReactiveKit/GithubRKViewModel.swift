@@ -53,8 +53,7 @@ class GithubRKViewModel {
         }
         self.username.skip(2).observe{
             username in
-            self.validUsername.value = ValidationResult.Validating
-            self.fetchUsername(username!).bindNextTo(self.validUsername)
+            self.fetchUsername(username!).startWith(ValidationResult.Validating).bindNextTo(self.validUsername)
         }
         self.validUsername.combineLatestWith(self.validPassword).combineLatestWith(self.validRepeat)
             .map{

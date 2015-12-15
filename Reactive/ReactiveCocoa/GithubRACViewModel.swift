@@ -43,12 +43,12 @@ class GithubRACViewModel {
                     }
                 }
                 .on(started:{
-                    _ in self.signingIn.value = true
+                    _ in
                     self.signedUpEnabled.value = false;
                     },
                     completed:
                     {
-                        _ in self.signingIn.value = false
+                        _ in
                         self.signedUpEnabled.value = true;
                         self.dates.value.append(NSDate())
                     },
@@ -59,7 +59,6 @@ class GithubRACViewModel {
                     failed:
                     {
                         error in self.signedIn.value = false
-                        self.signingIn.value = false
                         self.signedUpEnabled.value = true;
                 })
             return sp
@@ -70,7 +69,6 @@ class GithubRACViewModel {
     let validUsername = MutableProperty<ValidationResult>(ValidationResult.Empty)
     let validPassword = MutableProperty<ValidationResult>(ValidationResult.Empty)
     let validRepeat = MutableProperty<ValidationResult>(ValidationResult.Empty)
-    let signingIn = MutableProperty<Bool>(false)
     let signedUpEnabled = MutableProperty<Bool>(false)
     let signedIn = MutableProperty<Bool>(false)
     
