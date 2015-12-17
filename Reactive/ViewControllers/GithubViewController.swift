@@ -13,6 +13,7 @@ import RxCocoa
 import ReactiveCocoa
 import ReactiveUIKit
 import ReactiveKit
+import Action
 
 class GithubViewController: UIViewController {
     
@@ -21,6 +22,7 @@ class GithubViewController: UIViewController {
         API: GitHubDefaultAPI.sharedAPI,
         validationService: GitHubDefaultValidationService.sharedValidationService
     )
+    var subscription: RxSwift.Disposable?
     
     let racViewModel = GithubRACViewModel(validationService: GitHubRACDefaultValidationService())
     
@@ -28,7 +30,7 @@ class GithubViewController: UIViewController {
     
     var disposeBag = RxSwift.DisposeBag()
     
-    var signupAction:CocoaAction!
+    var signupAction:ReactiveCocoa.CocoaAction!
     var bindingHelper: TableViewBindingHelper<NSDate>!
     
     @IBOutlet weak var usernameOutlet: UITextField!
@@ -200,12 +202,35 @@ class GithubViewController: UIViewController {
             .bindTo(rxViewModel.repeatedPassword)
             .addDisposableTo(disposeBag)
         
-        signupOutlet.rx_tap
-            .bindTo(rxViewModel.loginTaps)
-            .addDisposableTo(disposeBag)
+        let action = CocoaAction (enabledIf: rxViewModel.signupEnabled){
+            self.rxViewModel.loginTaps.onNext()
+            self.signingUpOulet.startAnimating()
+            return create {
+                [weak self] observer -> RxSwift.Disposable in
+                self?.subscription?.dispose()
+                if((self?.subscription) != nil)
+                {
+                    self?.subscription = self?.rxViewModel.signedIn.skip(1).subscribeNext{
+                        result in
+                        observer.onCompleted()
+                    }
+                }
+                else
+                {
+                    self?.subscription = self?.rxViewModel.signedIn.subscribeNext{
+                        result in
+                        observer.onCompleted()
+                    }
+                }
+                return NopDisposable.instance
+            }
+        }
+        
+        signupOutlet.rx_action = action
         // }
         
-        
+        action.executing.bindTo(signingUpOulet.rx_animating)
+            .addDisposableTo(disposeBag)
         // bind results to  {
         rxViewModel.signupEnabled
             .subscribeNext { [weak self] valid  in
@@ -224,10 +249,6 @@ class GithubViewController: UIViewController {
         
         rxViewModel.validatedPasswordRepeated
             .bindTo(repeatedPasswordValidationOutlet.ex_validationResult)
-            .addDisposableTo(disposeBag)
-        
-        rxViewModel.signingIn
-            .bindTo(signingUpOulet.rx_animating)
             .addDisposableTo(disposeBag)
         
         rxViewModel.signedIn

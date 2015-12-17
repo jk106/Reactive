@@ -10,7 +10,6 @@ import Foundation
 import UIKit
 import RxSwift
 import RxCocoa
-import ReactiveCocoa
 
 extension ValidationResult: CustomStringConvertible {
     var description: String {
@@ -23,6 +22,38 @@ extension ValidationResult: CustomStringConvertible {
             return "validating ..."
         case let .Failed(message):
             return message
+        }
+    }
+}
+
+extension Observable {
+    func doOnNext(closure: Element -> Void) -> Observable<Element> {
+        return doOn { (event: Event) in
+            switch event {
+            case .Next(let value):
+                closure(value)
+            default: break
+            }
+        }
+    }
+    
+    func doOnCompleted(closure: () -> Void) -> Observable<Element> {
+        return doOn { (event: Event) in
+            switch event {
+            case .Completed:
+                closure()
+            default: break
+            }
+        }
+    }
+    
+    func doOnError(closure: ErrorType -> Void) -> Observable<Element> {
+        return doOn { (event: Event) in
+            switch event {
+            case .Error(let error):
+                closure(error)
+            default: break
+            }
         }
     }
 }

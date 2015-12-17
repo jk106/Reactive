@@ -84,6 +84,7 @@ strip_invalid_archs() {
 
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
+  install_framework "Pods-Reactive/Action.framework"
   install_framework "Pods-Reactive/Alamofire.framework"
   install_framework "Pods-Reactive/Interstellar.framework"
   install_framework "Pods-Reactive/ReactiveCocoa.framework"
@@ -96,6 +97,7 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "Pods-Reactive/RxSwift.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
+  install_framework "Pods-Reactive/Action.framework"
   install_framework "Pods-Reactive/Alamofire.framework"
   install_framework "Pods-Reactive/Interstellar.framework"
   install_framework "Pods-Reactive/ReactiveCocoa.framework"

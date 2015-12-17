@@ -1,4 +1,7 @@
 PODS:
+  - Action (1.0.0):
+    - RxCocoa (~> 2.0.0-beta)
+    - RxSwift (~> 2.0.0-beta)
   - Alamofire (3.1.3)
   - Interstellar (1.4.0):
     - Interstellar/Core (= 1.4.0)
@@ -31,6 +34,7 @@ PODS:
   - RxSwift (2.0.0-beta.4)
 
 DEPENDENCIES:
+  - Action
   - Alamofire
   - Interstellar
   - ReactiveCocoa (= 4.0.4-alpha-4)
@@ -42,6 +46,7 @@ DEPENDENCIES:
   - RxSwift (~> 2.0.0-beta)
 
 SPEC CHECKSUMS:
+  Action: ee1ecff01c99a92c61e7cb5219fa6d597e1b91a9
   Alamofire: 9f93b56389e48def9220dd57d1f44b1927229a5a
   Interstellar: 40fc666872436d6c1b3524c59437ebdb5dec1c6a
   ReactiveCocoa: e459ea92099447802df20c4735e31e8139b06094
