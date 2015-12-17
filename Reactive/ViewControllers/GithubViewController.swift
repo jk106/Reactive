@@ -22,7 +22,6 @@ class GithubViewController: UIViewController {
         API: GitHubDefaultAPI.sharedAPI,
         validationService: GitHubDefaultValidationService.sharedValidationService
     )
-    var subscription: RxSwift.Disposable?
     
     let racViewModel = GithubRACViewModel(validationService: GitHubRACDefaultValidationService())
     
@@ -202,34 +201,10 @@ class GithubViewController: UIViewController {
             .bindTo(rxViewModel.repeatedPassword)
             .addDisposableTo(disposeBag)
         
-        let action = CocoaAction (enabledIf: rxViewModel.signupEnabled){
-            self.rxViewModel.loginTaps.onNext()
-            self.signingUpOulet.startAnimating()
-            return create {
-                [weak self] observer -> RxSwift.Disposable in
-                self?.subscription?.dispose()
-                if((self?.subscription) != nil)
-                {
-                    self?.subscription = self?.rxViewModel.signedIn.skip(1).subscribeNext{
-                        result in
-                        observer.onCompleted()
-                    }
-                }
-                else
-                {
-                    self?.subscription = self?.rxViewModel.signedIn.subscribeNext{
-                        result in
-                        observer.onCompleted()
-                    }
-                }
-                return NopDisposable.instance
-            }
-        }
-        
-        signupOutlet.rx_action = action
+        signupOutlet.rx_action = rxViewModel.action
         // }
         
-        action.executing.bindTo(signingUpOulet.rx_animating)
+        rxViewModel.action.executing.bindTo(signingUpOulet.rx_animating)
             .addDisposableTo(disposeBag)
         // bind results to  {
         rxViewModel.signupEnabled
@@ -251,7 +226,7 @@ class GithubViewController: UIViewController {
             .bindTo(repeatedPasswordValidationOutlet.ex_validationResult)
             .addDisposableTo(disposeBag)
         
-        rxViewModel.signedIn
+        rxViewModel.signedIn.elements
             .subscribeNext { signedIn in
                 print("User signed in \(signedIn)")
                 if(signedIn){

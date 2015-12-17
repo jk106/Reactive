@@ -9,6 +9,7 @@
 import Foundation
 import RxSwift
 import RxCocoa
+import Action
 
 class GithubSignupViewModel {
     
@@ -21,8 +22,11 @@ class GithubSignupViewModel {
     let password = Variable("")
     let repeatedPassword = Variable("")
     
-    let loginTaps = PublishSubject<Void>()
-    
+    var action: CocoaAction = CocoaAction{_ in
+        return create{_ in
+            return NopDisposable.instance
+        }
+    }
     // }
     
     // outputs {
@@ -36,7 +40,10 @@ class GithubSignupViewModel {
     let signupEnabled: Observable<Bool>
     
     // Has user signed in
-    let signedIn: Observable<Bool>
+    var signedIn: Action<Void, Bool> = Action{
+        _ in
+        return just(false)
+    }
     
     // }
     
@@ -63,16 +70,6 @@ class GithubSignupViewModel {
         validatedPasswordRepeated = combineLatest(password, repeatedPassword, resultSelector: validationService.validateRepeatedPassword)
             .shareReplay(1)
         
-        let usernameAndPassword = combineLatest(username, password) { ($0, $1) }
-        
-        signedIn = loginTaps.withLatestFrom(usernameAndPassword)
-            .flatMapLatest { (username, password) in
-                return API.signup(username, password: password)
-                    .observeOn(MainScheduler.sharedInstance)
-                    .catchErrorJustReturn(false)
-            }
-            .shareReplay(1)
-        
         signupEnabled = combineLatest(
             validatedUsername,
             validatedPassword,
@@ -83,5 +80,24 @@ class GithubSignupViewModel {
                     repeatPassword.isValid
             }
             .shareReplay(1)
+        
+        signedIn = Action{
+            _ in
+            return combineLatest(self.username, self.password) { ($0, $1) }
+                .flatMapLatest{
+                    (username, password) in
+                    API.signup(username, password: password)
+                        .observeOn(MainScheduler.sharedInstance)
+            }.take(1)
+        }
+        action = CocoaAction (enabledIf: signupEnabled){
+            return create {
+                [weak self] observer -> RxSwift.Disposable in
+                self?.signedIn.execute()
+                return (self?.signedIn.elements.take(1).map{result in
+                    print("cc\(result)")
+                    }.subscribe(observer))!
+            }
+        }
     }
 }
