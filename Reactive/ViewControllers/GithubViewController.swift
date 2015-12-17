@@ -22,7 +22,6 @@ class GithubViewController: UIViewController {
         API: GitHubDefaultAPI.sharedAPI,
         validationService: GitHubDefaultValidationService.sharedValidationService
     )
-    var subscription: RxSwift.Disposable?
     
     let racViewModel = GithubRACViewModel(validationService: GitHubRACDefaultValidationService())
     
@@ -203,26 +202,15 @@ class GithubViewController: UIViewController {
             .addDisposableTo(disposeBag)
         
         let action = CocoaAction (enabledIf: rxViewModel.signupEnabled){
-            self.rxViewModel.loginTaps.onNext()
-            self.signingUpOulet.startAnimating()
             return create {
                 [weak self] observer -> RxSwift.Disposable in
-                self?.subscription?.dispose()
-                if((self?.subscription) != nil)
-                {
-                    self?.subscription = self?.rxViewModel.signedIn.skip(1).subscribeNext{
-                        result in
-                        observer.onCompleted()
-                    }
-                }
-                else
-                {
-                    self?.subscription = self?.rxViewModel.signedIn.subscribeNext{
-                        result in
-                        observer.onCompleted()
-                    }
-                }
-                return NopDisposable.instance
+                
+                self?.rxViewModel.loginTaps.onNext() // It's possible to abstract this out, but I'm leaving for now.
+                self?.signingUpOulet.startAnimating() // Not sure this is required, since you're binding to rx_animating
+                
+                let signIn = (self?.rxViewModel.signedIn ?? empty())
+            
+                return signIn.subscribe(observer)
             }
         }
         
