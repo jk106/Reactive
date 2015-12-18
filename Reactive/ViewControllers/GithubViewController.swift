@@ -90,15 +90,8 @@ class GithubViewController: UIViewController {
         rkViewModel.signedIn.skip(1).observe
             {
                 result in
-                print("User signed in \(result)")
                 let message = result ? "Mock: Signed in to GitHub." : "Mock: Sign in to GitHub failed"
-                let alertView = UIAlertView(
-                    title: "RxExample",
-                    message: message,
-                    delegate: nil,
-                    cancelButtonTitle: "OK"
-                )
-                alertView.show()
+                self.showMessage(message)
         }
         rkViewModel.dates.bindTo(tableView){ indexPath, dates, tableView in
             let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as UITableViewCell
@@ -162,26 +155,12 @@ class GithubViewController: UIViewController {
             }})
         racViewModel.loginTaps.values.observeOn(UIScheduler()).observeNext
             {_ in
-                let alertView = UIAlertView(
-                    title: "RxExample",
-                    message: "Mock: Signed in to GitHub.",
-                    delegate: nil,
-                    cancelButtonTitle: "OK"
-                )
-                
-                alertView.show()
+                self.showMessage("Mock: Signed in to GitHub.")
         }
         
         racViewModel.loginTaps.errors.observeOn(UIScheduler()).observeNext
             {_ in
-                let alertView = UIAlertView(
-                    title: "RxExample",
-                    message: "Mock: Sign in to GitHub failed",
-                    delegate: nil,
-                    cancelButtonTitle: "OK"
-                )
-                
-                alertView.show()
+                self.showMessage("Mock: Sign in to GitHub failed")
         }
         bindingHelper = TableViewBindingHelper(tableView: tableView, sourceSignal: self.racViewModel.dates.producer)
     }
@@ -201,10 +180,10 @@ class GithubViewController: UIViewController {
             .bindTo(rxViewModel.repeatedPassword)
             .addDisposableTo(disposeBag)
         
-        signupOutlet.rx_action = rxViewModel.action
+        signupOutlet.rx_action = rxViewModel.signedIn
         // }
         
-        rxViewModel.action.executing.bindTo(signingUpOulet.rx_animating)
+        rxViewModel.signedIn.executing.bindTo(signingUpOulet.rx_animating)
             .addDisposableTo(disposeBag)
         // bind results to  {
         rxViewModel.signupEnabled
@@ -226,20 +205,15 @@ class GithubViewController: UIViewController {
             .bindTo(repeatedPasswordValidationOutlet.ex_validationResult)
             .addDisposableTo(disposeBag)
         
-        rxViewModel.signedIn.elements
+        rxViewModel.errors
             .subscribeNext { signedIn in
-                print("User signed in \(signedIn)")
-                if(signedIn){
-                    self.rxViewModel.dates.value.append(NSDate())
-                }
-                let message = signedIn ? "Mock: Signed in to GitHub." : "Mock: Sign in to GitHub failed"
-                let alertView = UIAlertView(
-                    title: "RxExample",
-                    message: message,
-                    delegate: nil,
-                    cancelButtonTitle: "OK"
-                )
-                alertView.show()
+                self.showMessage(signedIn)
+            }
+            .addDisposableTo(disposeBag)
+        
+        rxViewModel.success
+            .subscribeNext { signedIn in
+                self.showMessage(signedIn)
             }
             .addDisposableTo(disposeBag)
         //}
@@ -253,6 +227,17 @@ class GithubViewController: UIViewController {
     
     func dismissKeyboard(gr: UITapGestureRecognizer) {
         view.endEditing(true)
+    }
+    
+    func showMessage(message: String)
+    {
+        let alertView = UIAlertView(
+            title: "RxExample",
+            message: message,
+            delegate: nil,
+            cancelButtonTitle: "OK"
+        )
+        alertView.show()
     }
     
     

@@ -22,11 +22,6 @@ class GithubSignupViewModel {
     let password = Variable("")
     let repeatedPassword = Variable("")
     
-    var action: CocoaAction = CocoaAction{_ in
-        return create{_ in
-            return NopDisposable.instance
-        }
-    }
     // }
     
     // outputs {
@@ -40,9 +35,20 @@ class GithubSignupViewModel {
     let signupEnabled: Observable<Bool>
     
     // Has user signed in
-    var signedIn: Action<Void, Bool> = Action{
-        _ in
-        return just(false)
+    var signedIn: CocoaAction = CocoaAction{_ in
+        return create{_ in
+            return NopDisposable.instance
+        }
+    }
+    
+    private var _errors = PublishSubject<String>()
+    var errors: Observable<String> {
+        return _errors.asObservable()
+    }
+    
+    private var _success = PublishSubject<String>()
+    var success: Observable<String> {
+        return _success.asObservable()
     }
     
     // }
@@ -88,16 +94,18 @@ class GithubSignupViewModel {
                     (username, password) in
                     API.signup(username, password: password)
                         .observeOn(MainScheduler.sharedInstance)
-            }.take(1)
-        }
-        action = CocoaAction (enabledIf: signupEnabled){
-            return create {
-                [weak self] observer -> RxSwift.Disposable in
-                self?.signedIn.execute()
-                return (self?.signedIn.elements.take(1).map{result in
-                    print("cc\(result)")
-                    }.subscribe(observer))!
-            }
+                        .doOn { event in
+                            switch event {
+                            case .Next(let signedUp) where signedUp == false:
+                                self._errors.onNext("Mock: Sign in to GitHub failed")
+                            case .Next(let signedUp) where signedUp == true:
+                                self._success.onNext("Mock: Signed in to GitHub.")
+                                self.dates.value.append(NSDate())
+                            default: break
+                            }
+                        }
+                        .map { _ in Void() }
+                }.take(1)
         }
     }
 }
