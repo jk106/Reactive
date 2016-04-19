@@ -11,7 +11,7 @@ pod 'RxCocoa', '~> 2.4'
 pod 'RxBlocking', '~> 2.0.0-beta'
 pod 'ReactiveKit', '~> 2.0.0-beta4'
 pod 'ReactiveUIKit', '~> 2.0.0-beta4'
-pod 'Interstellar'
+pod 'Bond'
 pod 'Alamofire'
 end
 

@@ -3,12 +3,7 @@ PODS:
     - RxCocoa (~> 2.0)
     - RxSwift (~> 2.0)
   - Alamofire (3.3.1)
-  - Interstellar (1.4.0):
-    - Interstellar/Core (= 1.4.0)
-    - Interstellar/Warpdrive (= 1.4.0)
-  - Interstellar/Core (1.4.0)
-  - Interstellar/Warpdrive (1.4.0):
-    - Interstellar/Core
+  - Bond (4.3.1)
   - ReactiveCocoa (4.1.0):
     - ReactiveCocoa/UI (= 4.1.0)
     - Result (~> 2.0)
@@ -33,7 +28,7 @@ PODS:
 DEPENDENCIES:
   - Action
   - Alamofire
-  - Interstellar
+  - Bond
   - ReactiveCocoa (= 4.1.0)
   - ReactiveKit (~> 2.0.0-beta4)
   - ReactiveUIKit (~> 2.0.0-beta4)
@@ -44,7 +39,7 @@ DEPENDENCIES:
 SPEC CHECKSUMS:
   Action: b602680262545973293b0fd0aca84d1a49141608
   Alamofire: 369bc67b6f5ac33ded3648d7bd21c5bfb91c2ecc
-  Interstellar: 40fc666872436d6c1b3524c59437ebdb5dec1c6a
+  Bond: 55903fc67f09e8e49791a657163cabba1d6fb29d
   ReactiveCocoa: d70004d7a366a7b8e87e60ce2347182c77701949
   ReactiveKit: 4d978a4e63c5590da4848f8b2d632bc9a69fceb6
   ReactiveUIKit: 62f4dd2112a21c3d75ccb13d3e41dda804cbfc9b
