@@ -1,61 +1,56 @@
 PODS:
-  - Action (1.0.0):
-    - RxCocoa (~> 2.0.0-beta)
-    - RxSwift (~> 2.0.0-beta)
-  - Alamofire (3.1.3)
+  - Action (1.2.1):
+    - RxCocoa (~> 2.0)
+    - RxSwift (~> 2.0)
+  - Alamofire (3.3.1)
   - Interstellar (1.4.0):
     - Interstellar/Core (= 1.4.0)
     - Interstellar/Warpdrive (= 1.4.0)
   - Interstellar/Core (1.4.0)
   - Interstellar/Warpdrive (1.4.0):
     - Interstellar/Core
-  - ReactiveCocoa (4.0.4-alpha-4):
-    - ReactiveCocoa/UI (= 4.0.4-alpha-4)
-    - Result (~> 1.0)
-  - ReactiveCocoa/Core (4.0.4-alpha-4):
+  - ReactiveCocoa (4.1.0):
+    - ReactiveCocoa/UI (= 4.1.0)
+    - Result (~> 2.0)
+  - ReactiveCocoa/Core (4.1.0):
     - ReactiveCocoa/no-arc
-    - Result (~> 1.0)
-  - ReactiveCocoa/no-arc (4.0.4-alpha-4):
-    - Result (~> 1.0)
-  - ReactiveCocoa/UI (4.0.4-alpha-4):
+    - Result (~> 2.0)
+  - ReactiveCocoa/no-arc (4.1.0):
+    - Result (~> 2.0)
+  - ReactiveCocoa/UI (4.1.0):
     - ReactiveCocoa/Core
-    - Result (~> 1.0)
-  - ReactiveFoundation (1.0.4):
-    - ReactiveKit
-  - ReactiveKit (1.0.9)
-  - ReactiveUIKit (1.0.9):
-    - ReactiveFoundation
-    - ReactiveKit
-  - Result (1.0.0)
-  - RxBlocking (2.0.0-beta.4):
-    - RxSwift (~> 2.0.0-beta)
-  - RxCocoa (2.0.0-beta.4):
-    - RxSwift (~> 2.0.0-beta)
-  - RxSwift (2.0.0-beta.4)
+    - Result (~> 2.0)
+  - ReactiveKit (2.0.0-beta4)
+  - ReactiveUIKit (2.0.0-beta4):
+    - ReactiveKit (~> 2.0.0-beta)
+  - Result (2.0.0)
+  - RxBlocking (2.0.0):
+    - RxSwift (~> 2.0)
+  - RxCocoa (2.4):
+    - RxSwift (~> 2.4)
+  - RxSwift (2.4)
 
 DEPENDENCIES:
   - Action
   - Alamofire
   - Interstellar
-  - ReactiveCocoa (= 4.0.4-alpha-4)
-  - ReactiveFoundation (~> 1.0)
-  - ReactiveKit (~> 1.0)
-  - ReactiveUIKit (~> 1.0.9)
+  - ReactiveCocoa (= 4.1.0)
+  - ReactiveKit (~> 2.0.0-beta4)
+  - ReactiveUIKit (~> 2.0.0-beta4)
   - RxBlocking (~> 2.0.0-beta)
-  - RxCocoa (~> 2.0.0-beta)
-  - RxSwift (~> 2.0.0-beta)
+  - RxCocoa (~> 2.4)
+  - RxSwift (~> 2.4)
 
 SPEC CHECKSUMS:
-  Action: ee1ecff01c99a92c61e7cb5219fa6d597e1b91a9
-  Alamofire: 9f93b56389e48def9220dd57d1f44b1927229a5a
+  Action: b602680262545973293b0fd0aca84d1a49141608
+  Alamofire: 369bc67b6f5ac33ded3648d7bd21c5bfb91c2ecc
   Interstellar: 40fc666872436d6c1b3524c59437ebdb5dec1c6a
-  ReactiveCocoa: e459ea92099447802df20c4735e31e8139b06094
-  ReactiveFoundation: ea146bd578c3e9c9c5d0b2fc87320f10ac7917bb
-  ReactiveKit: 196fc1798b76b69d73325e49ed2a97f41d2c69a9
-  ReactiveUIKit: c8d1ef5f09981a1b70dc03f0fa263dafa06ee000
-  Result: feaaff535eb59c414c6c7f95e6145ab991b1b07f
-  RxBlocking: 234b0c161315ff3ade25c11e48d74e9ca83158b5
-  RxCocoa: 4a3e433e6dfe116362ff54423c841cc0f209e009
-  RxSwift: 191c6b06da783a8671433cf35a54d2ad2fd2d9de
+  ReactiveCocoa: d70004d7a366a7b8e87e60ce2347182c77701949
+  ReactiveKit: 4d978a4e63c5590da4848f8b2d632bc9a69fceb6
+  ReactiveUIKit: 62f4dd2112a21c3d75ccb13d3e41dda804cbfc9b
+  Result: 9e75e1111c774c6ac594e14907b15057053a7959
+  RxBlocking: a95a10ed54eb5d116f6c9a87047ff671e181d07b
+  RxCocoa: 7d6cd877de99f5640306b3d6cf87f580c1d91b61
+  RxSwift: 67b9ef4e8b34fb394e200e754c6a09cc16559f94
 
 COCOAPODS: 0.39.0

@@ -15,14 +15,14 @@ extension UILabel {
         static var ValidationResultKey = "r_ValidatioNResultKey"
     }
     
-    var rValidationResult: Observable<ValidationResult?> {
+    var rValidationResult: Property<ValidationResult?> {
         if let rValidationResult: AnyObject = objc_getAssociatedObject(self, &AssociatedKeys.ValidationResultKey) {
-            return rValidationResult as! Observable<ValidationResult?>
+            return rValidationResult as! Property<ValidationResult?>
         } else {
-            let rValidationResult = Observable<ValidationResult?>(ValidationResult.Empty)
+            let rValidationResult = Property<ValidationResult?>(ValidationResult.Empty)
             objc_setAssociatedObject(self, &AssociatedKeys.ValidationResultKey, rValidationResult, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             
-            rValidationResult.observe(on: ImmediateOnMainExecutionContext) { [weak self] (result: ValidationResult?) in
+            rValidationResult.observeIn(ImmediateOnMainExecutionContext).observeNext { [weak self] (result: ValidationResult?) in
                     self?.textColor = result!.textColor
                     self?.text = result!.description
             }

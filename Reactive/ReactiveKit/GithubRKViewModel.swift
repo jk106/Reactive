@@ -15,22 +15,22 @@ class GithubRKViewModel {
     private let validationService: GitHubRACValidationService
     
     // inputs
-    let username:Observable<String?> = Observable("")
-    let password:Observable<String?> = Observable("")
-    let repeatedPassword:Observable<String?> = Observable("")
+    let username:Property<String?> = Property("")
+    let password:Property<String?> = Property("")
+    let repeatedPassword:Property<String?> = Property("")
     
-    let loginTaps = Observable()
+    let loginTaps = Property()
     
     //outputs
-    let validUsername = Observable(ValidationResult.Empty)
-    let validPassword = Observable(ValidationResult.Empty)
-    let validRepeat = Observable(ValidationResult.Empty)
+    let validUsername = Property(ValidationResult.Empty)
+    let validPassword = Property(ValidationResult.Empty)
+    let validRepeat = Property(ValidationResult.Empty)
     
-    let signupEnabled = Observable(false)
-    let signingIn = Observable(false)
-    let signedIn = Observable(false)
+    let signupEnabled = Property(false)
+    let signingIn = Property(false)
+    let signedIn = Property(false)
     
-    var dates = ObservableCollection([NSDate()])
+    var dates = CollectionProperty([NSDate()])
     
     init(validationService: GitHubRACValidationService) {
         self.dates.removeLast()
@@ -38,7 +38,7 @@ class GithubRKViewModel {
         self.password.map{
             password in
             return self.validationService.validatePassword(password!)
-            }.observe
+            }.observeNext
             {
                 result in
                 self.validPassword.value = result
@@ -46,25 +46,25 @@ class GithubRKViewModel {
         self.repeatedPassword.skip(2).combineLatestWith(self.password).map{
             p1,p2 in
             return self.validationService.validateRepeatedPassword(p1!, repeatedPassword: p2!)
-            }.observe
+            }.observeNext
             {
                 result in
                 self.validRepeat.value = result
         }
-        self.username.skip(2).observe{
+        self.username.skip(2).observeNext{
             username in
-            self.fetchUsername(username!).startWith(ValidationResult.Validating).bindNextTo(self.validUsername)
+            self.fetchUsername(username!).startWith(ValidationResult.Validating).toStream(recoverWith: ValidationResult.Empty).bindTo(self.validUsername)
         }
         self.validUsername.combineLatestWith(self.validPassword).combineLatestWith(self.validRepeat)
             .map{
                 v1,v2 in
                 return v1.0.isValid && v1.1.isValid && v2.isValid
-            }.observe
+            }.observeNext
             {
                 result in
                 self.signupEnabled.value = result
         }
-        self.loginTaps.skip(1).combineLatestWith(self.username.skip(1)).zipWith(self.password).observe{
+        self.loginTaps.skip(1).combineLatestWith(self.username.skip(1)).zipWith(self.password).observeNext{
             username, password in
             self.signingIn.value = true
             self.signupEnabled.value = false
@@ -98,7 +98,7 @@ class GithubRKViewModel {
                 dispatch_async(dispatch_get_main_queue(), { () -> Void in
                     print("This is run on the main queue, after the previous code in outer block")
                     observer.next(signupResult)
-                    observer.success()
+                    observer.completed()
                 })
             }
             return BlockDisposable {
@@ -116,7 +116,7 @@ class GithubRKViewModel {
                 } else {
                     observer.next((response?.statusCode == 404) ? ValidationResult.OK(message: "Username available")
                         : ValidationResult.Failed(message: "Username already taken"))
-                    observer.success()
+                    observer.completed()
                 }
             }
             return BlockDisposable {

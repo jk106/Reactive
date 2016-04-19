@@ -3,7 +3,7 @@
 //  RxCocoa
 //
 //  Created by Krunoslav Zaher on 6/15/15.
-//  Copyright (c) 2015 Krunoslav Zaher. All rights reserved.
+//  Copyright © 2015 Krunoslav Zaher. All rights reserved.
 //
 
 #if os(iOS) || os(tvOS)
@@ -20,15 +20,15 @@ class TableViewDataSourceNotSet
     : NSObject
     , UITableViewDataSource {
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return rxAbstractMethodWithMessage(dataSourceNotSet)
+        rxAbstractMethodWithMessage(dataSourceNotSet)
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return rxAbstractMethodWithMessage(dataSourceNotSet)
+        rxAbstractMethodWithMessage(dataSourceNotSet)
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        return rxAbstractMethodWithMessage(dataSourceNotSet)
+        rxAbstractMethodWithMessage(dataSourceNotSet)
     }
 }
 
@@ -48,7 +48,7 @@ public class RxTableViewDataSourceProxy
     private weak var _requiredMethodsDataSource: UITableViewDataSource? = tableViewDataSourceNotSet
 
     /**
-     Initializes `RxTableViewDelegateProxy`
+     Initializes `RxTableViewDataSourceProxy`
 
      - parameter parentObject: Parent object for delegate proxy.
      */
@@ -102,16 +102,16 @@ public class RxTableViewDataSourceProxy
      For more information take a look at `DelegateProxyType`.
      */
     public class func setCurrentDelegate(delegate: AnyObject?, toObject object: AnyObject) {
-        let collectionView: UITableView = castOrFatalError(object)
-        collectionView.dataSource = castOptionalOrFatalError(delegate)
+        let tableView: UITableView = castOrFatalError(object)
+        tableView.dataSource = castOptionalOrFatalError(delegate)
     }
 
     /**
      For more information take a look at `DelegateProxyType`.
      */
     public class func currentDelegateFor(object: AnyObject) -> AnyObject? {
-        let collectionView: UITableView = castOrFatalError(object)
-        return collectionView.dataSource
+        let tableView: UITableView = castOrFatalError(object)
+        return tableView.dataSource
     }
 
     /**

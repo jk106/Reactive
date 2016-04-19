@@ -58,7 +58,7 @@ class GithubViewController: UIViewController {
         default:
             loadRK()
         }
-        let tapBackground = UITapGestureRecognizer(target: self, action: Selector("dismissKeyboard:"))
+        let tapBackground = UITapGestureRecognizer(target: self, action: #selector(GithubViewController.dismissKeyboard(_:)))
         view.addGestureRecognizer(tapBackground)
     }
     
@@ -75,10 +75,10 @@ class GithubViewController: UIViewController {
         repeatedPasswordOutlet.rText.bindTo(rkViewModel.repeatedPassword)
         rkViewModel.validRepeat.bindTo(repeatedPasswordValidationOutlet.rValidationResult)
         
-        usernameOutlet.rText.throttle(0.5, on: Queue.main).bindTo(rkViewModel.username)
+        usernameOutlet.rText.throttle(0.5).bindTo(rkViewModel.username)
         rkViewModel.validUsername.bindTo(usernameValidationOutlet.rValidationResult)
         
-        rkViewModel.signupEnabled.observe
+        rkViewModel.signupEnabled.observeNext
             {
                 enabled in
                 self.signupOutlet.enabled = enabled
@@ -87,7 +87,7 @@ class GithubViewController: UIViewController {
         
         rkViewModel.signingIn.bindTo(signingUpOulet.rAnimating)
         signupOutlet.rTap.bindTo(rkViewModel.loginTaps)
-        rkViewModel.signedIn.skip(1).observe
+        rkViewModel.signedIn.skip(1).observeNext
             {
                 result in
                 let message = result ? "Mock: Signed in to GitHub." : "Mock: Sign in to GitHub failed"
@@ -217,7 +217,7 @@ class GithubViewController: UIViewController {
             }
             .addDisposableTo(disposeBag)
         //}
-        rxViewModel.dates.bindTo(tableView.rx_itemsWithCellIdentifier("Cell")){ (row, element, cell) in
+        rxViewModel.dates.asObservable().bindTo(tableView.rx_itemsWithCellIdentifier("Cell")){ (row, element, cell) in
             let formatter = NSDateFormatter()
             formatter.dateStyle = NSDateFormatterStyle.LongStyle
             formatter.timeStyle = .MediumStyle

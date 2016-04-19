@@ -8,6 +8,7 @@
 
 import UIKit
 import ReactiveCocoa
+import Result
 
 class GithubRACViewModel {
     

@@ -9,6 +9,7 @@
 
 import UIKit
 import ReactiveCocoa
+import Result
 
 struct AssociationKey {
     static var hidden: UInt8 = 1
@@ -73,7 +74,7 @@ extension UITextField {
     public var rac_text: MutableProperty<String> {
         return lazyAssociatedProperty(self, key: &AssociationKey.text) {
             
-            self.addTarget(self, action: "changed", forControlEvents: UIControlEvents.EditingChanged)
+            self.addTarget(self, action: #selector(UITextField.changed), forControlEvents: UIControlEvents.EditingChanged)
             
             let property = MutableProperty<String>(self.text ?? "")
             property.producer

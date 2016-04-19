@@ -1,7 +1,7 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
 /// An enum representing either a failure with an explanatory error, or a success with a result value.
-public enum Result<T, Error: ErrorType>: ResultType, CustomStringConvertible, CustomDebugStringConvertible {
+public enum Result<T, Error: ResultErrorType>: ResultType, CustomStringConvertible, CustomDebugStringConvertible {
 	case Success(T)
 	case Failure(Error)
 
@@ -17,24 +17,28 @@ public enum Result<T, Error: ErrorType>: ResultType, CustomStringConvertible, Cu
 		self = .Failure(error)
 	}
 
-	/// Constructs a result from an Optional, failing with `Error` if `nil`
+	/// Constructs a result from an Optional, failing with `Error` if `nil`.
 	public init(_ value: T?, @autoclosure failWith: () -> Error) {
 		self = value.map(Result.Success) ?? .Failure(failWith())
 	}
 
-	/// Constructs a result from a function that uses `throw`, failing with `Error` if throws
+	/// Constructs a result from a function that uses `throw`, failing with `Error` if throws.
 	public init(@autoclosure _ f: () throws -> T) {
+		self.init(attempt: f)
+	}
+
+	/// Constructs a result from a function that uses `throw`, failing with `Error` if throws.
+	public init(@noescape attempt f: () throws -> T) {
 		do {
 			self = .Success(try f())
 		} catch {
 			self = .Failure(error as! Error)
 		}
 	}
-	
 
 	// MARK: Deconstruction
 
-	/// Returns the value from `Success` Results or `throw`s the error
+	/// Returns the value from `Success` Results or `throw`s the error.
 	public func dematerialize() throws -> T {
 		switch self {
 		case let .Success(value):
@@ -85,9 +89,15 @@ public enum Result<T, Error: ErrorType>: ResultType, CustomStringConvertible, Cu
 	/// The userInfo key for source file line numbers in errors constructed by Result.
 	public static var lineKey: String { return "\(errorDomain).line" }
 
+	#if os(Linux)
+	private typealias UserInfoType = Any
+	#else
+	private typealias UserInfoType = AnyObject
+	#endif
+
 	/// Constructs an error.
-	public static func error(message: String? = nil, function: String = __FUNCTION__, file: String = __FILE__, line: Int = __LINE__) -> NSError {
-		var userInfo: [String: AnyObject] = [
+	public static func error(message: String? = nil, function: String = #function, file: String = #file, line: Int = #line) -> NSError {
+		var userInfo: [String: UserInfoType] = [
 			functionKey: function,
 			fileKey: file,
 			lineKey: line,
@@ -153,19 +163,21 @@ public func materialize<T>(@noescape f: () throws -> T) -> Result<T, NSError> {
 public func materialize<T>(@autoclosure f: () throws -> T) -> Result<T, NSError> {
 	do {
 		return .Success(try f())
-	} catch {
-		return .Failure(error as NSError)
+	} catch let error as NSError {
+		return .Failure(error)
 	}
 }
 
 // MARK: - Cocoa API conveniences
+
+#if !os(Linux)
 
 /// Constructs a Result with the result of calling `try` with an error pointer.
 ///
 /// This is convenient for wrapping Cocoa API which returns an object or `nil` + an error, by reference. e.g.:
 ///
 ///     Result.try { NSData(contentsOfURL: URL, options: .DataReadingMapped, error: $0) }
-public func `try`<T>(function: String = __FUNCTION__, file: String = __FILE__, line: Int = __LINE__, `try`: NSErrorPointer -> T?) -> Result<T, NSError> {
+public func `try`<T>(function: String = #function, file: String = #file, line: Int = #line, `try`: NSErrorPointer -> T?) -> Result<T, NSError> {
 	var error: NSError?
 	return `try`(&error).map(Result.Success) ?? .Failure(error ?? Result<T, NSError>.error(function: function, file: file, line: line))
 }
@@ -175,13 +187,14 @@ public func `try`<T>(function: String = __FUNCTION__, file: String = __FILE__, l
 /// This is convenient for wrapping Cocoa API which returns a `Bool` + an error, by reference. e.g.:
 ///
 ///     Result.try { NSFileManager.defaultManager().removeItemAtURL(URL, error: $0) }
-public func `try`(function: String = __FUNCTION__, file: String = __FILE__, line: Int = __LINE__, `try`: NSErrorPointer -> Bool) -> Result<(), NSError> {
+public func `try`(function: String = #function, file: String = #file, line: Int = #line, `try`: NSErrorPointer -> Bool) -> Result<(), NSError> {
 	var error: NSError?
 	return `try`(&error) ?
 		.Success(())
 	:	.Failure(error ?? Result<(), NSError>.error(function: function, file: file, line: line))
 }
 
+#endif
 
 // MARK: - Operators
 
@@ -200,5 +213,33 @@ public func >>- <T, U, Error> (result: Result<T, Error>, @noescape transform: T 
 	return result.flatMap(transform)
 }
 
+
+// MARK: - ErrorTypeConvertible conformance
+
+#if !os(Linux)
+	
+	public extension ErrorTypeConvertible where Self : NSError {
+		public func force<T>() -> T {
+			return self as! T
+		}
+	}
+	
+	extension NSError: ErrorTypeConvertible {
+		public static func errorFromErrorType(error: ResultErrorType) -> Self {
+			let e = error as NSError
+			return e.force()
+		}
+	}
+
+#endif
+
+// MARK: -
+
+/// An “error” that is impossible to construct.
+///
+/// This can be used to describe `Result`s where failures will never
+/// be generated. For example, `Result<Int, NoError>` describes a result that
+/// contains an `Int`eger and is guaranteed never to be a `Failure`.
+public enum NoError: ResultErrorType { }
 
 import Foundation

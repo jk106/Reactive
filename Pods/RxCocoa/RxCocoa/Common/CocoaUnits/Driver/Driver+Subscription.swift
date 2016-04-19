@@ -1,5 +1,5 @@
 //
-//  Driver+Extensions.swift
+//  Driver+Subscription.swift
 //  Rx
 //
 //  Created by Krunoslav Zaher on 9/19/15.
@@ -22,7 +22,21 @@ extension DriverConvertibleType {
     */
     @warn_unused_result(message="http://git.io/rxs.ud")
     public func drive<O: ObserverType where O.E == E>(observer: O) -> Disposable {
+        MainScheduler.ensureExecutingOnScheduler()
         return self.asObservable().subscribe(observer)
+    }
+
+    /**
+    Creates new subscription and sends elements to variable.
+
+    - parameter variable: Target variable for sequence elements.
+    - returns: Disposable object that can be used to unsubscribe the observer from the variable.
+    */
+    @warn_unused_result(message="http://git.io/rxs.ud")
+    public func drive(variable: Variable<E>) -> Disposable {
+        return drive(onNext: { e in
+            variable.value = e
+        })
     }
 
     /**
@@ -33,6 +47,7 @@ extension DriverConvertibleType {
     */
     @warn_unused_result(message="http://git.io/rxs.ud")
     public func drive<R>(transformation: Observable<E> -> R) -> R {
+        MainScheduler.ensureExecutingOnScheduler()
         return transformation(self.asObservable())
     }
 
@@ -50,6 +65,7 @@ extension DriverConvertibleType {
     */
     @warn_unused_result(message="http://git.io/rxs.ud")
     public func drive<R1, R2>(with: Observable<E> -> R1 -> R2, curriedArgument: R1) -> R2 {
+        MainScheduler.ensureExecutingOnScheduler()
         return with(self.asObservable())(curriedArgument)
     }
     
@@ -67,6 +83,7 @@ extension DriverConvertibleType {
     */
     @warn_unused_result(message="http://git.io/rxs.ud")
     public func drive(onNext onNext: ((E) -> Void)? = nil, onCompleted: (() -> Void)? = nil, onDisposed: (() -> Void)? = nil) -> Disposable {
+        MainScheduler.ensureExecutingOnScheduler()
         return self.asObservable().subscribe(onNext: onNext, onCompleted: onCompleted, onDisposed: onDisposed)
     }
     
@@ -78,6 +95,7 @@ extension DriverConvertibleType {
     */
     @warn_unused_result(message="http://git.io/rxs.ud")
     public func driveNext(onNext: E -> Void) -> Disposable {
+        MainScheduler.ensureExecutingOnScheduler()
         return self.asObservable().subscribeNext(onNext)
     }
 }

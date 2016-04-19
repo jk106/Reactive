@@ -36,7 +36,7 @@ class GithubSignupViewModel {
     
     // Has user signed in
     var signedIn: CocoaAction = CocoaAction{_ in
-        return create{_ in
+        return Observable.create{_ in
             return NopDisposable.instance
         }
     }
@@ -59,24 +59,25 @@ class GithubSignupViewModel {
         self.API = API
         self.validationService = validationService
         
-        validatedUsername = username
+        validatedUsername = username.asObservable()
             .flatMapLatest { username in
                 return validationService.validateUsername(username)
-                    .observeOn(MainScheduler.sharedInstance)
+                    .observeOn(MainScheduler.instance)
                     .catchErrorJustReturn(.Failed(message: "Error contacting server"))
             }
             .shareReplay(1)
         
-        validatedPassword = password
+        validatedPassword = password.asObservable()
             .map { password in
                 return validationService.validatePassword(password)
             }
             .shareReplay(1)
         
-        validatedPasswordRepeated = combineLatest(password, repeatedPassword, resultSelector: validationService.validateRepeatedPassword)
+        validatedPasswordRepeated = Observable.combineLatest(password.asObservable(), repeatedPassword.asObservable()
+            , resultSelector: validationService.validateRepeatedPassword)
             .shareReplay(1)
         
-        signupEnabled = combineLatest(
+        signupEnabled = Observable.combineLatest(
             validatedUsername,
             validatedPassword,
             validatedPasswordRepeated
@@ -89,11 +90,11 @@ class GithubSignupViewModel {
         
         signedIn = Action{
             _ in
-            return combineLatest(self.username, self.password) { ($0, $1) }
+            return Observable.combineLatest(self.username.asObservable(), self.password.asObservable()) { ($0, $1) }
                 .flatMapLatest{
                     (username, password) in
                     API.signup(username, password: password)
-                        .observeOn(MainScheduler.sharedInstance)
+                        .observeOn(MainScheduler.instance)
                         .doOn { event in
                             switch event {
                             case .Next(let signedUp) where signedUp == false:
