@@ -38,32 +38,21 @@ class GithubRKViewModel {
         self.password.map{
             password in
             return self.validationService.validatePassword(password!)
-            }.observeNext
-            {
-                result in
-                self.validPassword.value = result
-        }
+            }.bindTo(self.validPassword)
+        
         self.repeatedPassword.skip(2).combineLatestWith(self.password).map{
             p1,p2 in
             return self.validationService.validateRepeatedPassword(p1!, repeatedPassword: p2!)
-            }.observeNext
-            {
-                result in
-                self.validRepeat.value = result
-        }
-        self.username.skip(2).observeNext{
+            }.bindTo(self.validRepeat)
+        self.username.skip(2).flatMap(.Latest){ username in return Stream.sequence([username!])}.observeNext{
             username in
-            self.fetchUsername(username!).startWith(ValidationResult.Validating).toStream(recoverWith: ValidationResult.Empty).bindTo(self.validUsername)
+            self.fetchUsername(username).startWith(ValidationResult.Validating).toStream(recoverWith: ValidationResult.Empty).bindTo(self.validUsername)
         }
         self.validUsername.combineLatestWith(self.validPassword).combineLatestWith(self.validRepeat)
             .map{
                 v1,v2 in
                 return v1.0.isValid && v1.1.isValid && v2.isValid
-            }.observeNext
-            {
-                result in
-                self.signupEnabled.value = result
-        }
+            }.bindTo(self.signupEnabled)
         self.loginTaps.skip(1).combineLatestWith(self.username.skip(1)).zipWith(self.password).observeNext{
             username, password in
             self.signingIn.value = true

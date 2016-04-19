@@ -30,7 +30,7 @@ class MenuViewController: UIViewController {
             gVC.library = 1
         case "RxSwift":
             gVC.library = 2
-        case "Interstellar":
+        case "SwiftBond":
             gVC.library = 3
         default:
             gVC.library = 4
