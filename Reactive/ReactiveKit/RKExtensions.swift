@@ -12,7 +12,7 @@ import ReactiveKit
 extension UILabel {
     
     private struct AssociatedKeys {
-        static var ValidationResultKey = "r_ValidatioNResultKey"
+        static var ValidationResultKey = "r_ValidationResultKey"
     }
     
     var rValidationResult: Property<ValidationResult?> {
@@ -25,7 +25,7 @@ extension UILabel {
             rValidationResult.observeIn(ImmediateOnMainExecutionContext).observeNext { [weak self] (result: ValidationResult?) in
                     self?.textColor = result!.textColor
                     self?.text = result!.description
-            }
+            }.disposeIn(rBag)
             return rValidationResult
         }
     }

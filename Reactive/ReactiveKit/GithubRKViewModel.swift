@@ -21,6 +21,8 @@ class GithubRKViewModel {
     
     let loginTaps = Property()
     
+    let disposeBag = DisposeBag()
+    
     //outputs
     let validUsername = Property(ValidationResult.Empty)
     let validPassword = Property(ValidationResult.Empty)
@@ -44,10 +46,10 @@ class GithubRKViewModel {
             p1,p2 in
             return self.validationService.validateRepeatedPassword(p1!, repeatedPassword: p2!)
             }.bindTo(self.validRepeat)
-        self.username.skip(2).flatMap(.Latest){ username in return Stream.sequence([username!])}.observeNext{
+        self.username.skip(2).flatMap(.Latest){ username in return Stream.sequence([username!])}.flatMap(.Latest){
             username in
-            self.fetchUsername(username).startWith(ValidationResult.Validating).toStream(recoverWith: ValidationResult.Empty).bindTo(self.validUsername)
-        }
+            self.fetchUsername(username).startWith(ValidationResult.Validating).toStream(recoverWith: ValidationResult.Validating)
+        }.bindTo(self.validUsername)
         self.validUsername.combineLatestWith(self.validPassword).combineLatestWith(self.validRepeat)
             .map{
                 v1,v2 in
@@ -72,8 +74,8 @@ class GithubRKViewModel {
                     self.signingIn.value = false
                     self.signupEnabled.value = true
                 }
-            }
-        }
+            }.disposeIn(self.disposeBag)
+        }.disposeIn(disposeBag)
     }
     
     func signIn(username: String, password: String) -> Operation<Bool, NSError>

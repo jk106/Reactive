@@ -28,6 +28,7 @@ class GithubViewController: UIViewController {
     let rkViewModel = GithubRKViewModel(validationService: GitHubRACDefaultValidationService())
     
     var disposeBag = RxSwift.DisposeBag()
+    var rkDisposeBag = ReactiveKit.DisposeBag()
     
     var signupAction:ReactiveCocoa.CocoaAction!
     var bindingHelper: TableViewBindingHelper<NSDate>!
@@ -75,7 +76,7 @@ class GithubViewController: UIViewController {
         repeatedPasswordOutlet.rText.bindTo(rkViewModel.repeatedPassword)
         rkViewModel.validRepeat.bindTo(repeatedPasswordValidationOutlet.rValidationResult)
         
-        usernameOutlet.rText.throttle(0.5).bindTo(rkViewModel.username)
+        usernameOutlet.rText.bindTo(rkViewModel.username)
         rkViewModel.validUsername.bindTo(usernameValidationOutlet.rValidationResult)
         
         rkViewModel.signupEnabled.observeNext
@@ -83,7 +84,7 @@ class GithubViewController: UIViewController {
                 enabled in
                 self.signupOutlet.enabled = enabled
                 self.signupOutlet.alpha = enabled ? 1.0 : 0.5
-        }
+        }.disposeIn(rkDisposeBag)
         
         rkViewModel.signingIn.bindTo(signingUpOulet.rAnimating)
         signupOutlet.rTap.bindTo(rkViewModel.loginTaps)
@@ -92,7 +93,7 @@ class GithubViewController: UIViewController {
                 result in
                 let message = result ? "Mock: Signed in to GitHub." : "Mock: Sign in to GitHub failed"
                 self.showMessage(message)
-        }
+        }.disposeIn(rkDisposeBag)
         rkViewModel.dates.bindTo(tableView){ indexPath, dates, tableView in
             let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as UITableViewCell
             let row = indexPath.row
@@ -231,13 +232,14 @@ class GithubViewController: UIViewController {
     
     func showMessage(message: String)
     {
-        let alertView = UIAlertView(
+        let alert = UIAlertController(
             title: "RxExample",
             message: message,
-            delegate: nil,
-            cancelButtonTitle: "OK"
+            preferredStyle: UIAlertControllerStyle.Alert
         )
-        alertView.show()
+        let cancelAction = UIAlertAction(title: "OK", style: .Cancel, handler: nil)
+        alert.addAction(cancelAction)
+        presentViewController(alert, animated: true, completion: nil)
     }
     
     
