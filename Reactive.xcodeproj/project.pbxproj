@@ -27,6 +27,8 @@
 		1A5E480A1C1F2697000B9362 /* TableViewBindingHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A5E48091C1F2697000B9362 /* TableViewBindingHelper.swift */; };
 		1AF69D571C1B055400DF2129 /* GithubRKViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AF69D561C1B055400DF2129 /* GithubRKViewModel.swift */; };
 		1AF69D971C1B111300DF2129 /* RKExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AF69D961C1B111300DF2129 /* RKExtensions.swift */; };
+		3AD802101CC810A9008651ED /* GithubSBViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AD8020F1CC810A9008651ED /* GithubSBViewModel.swift */; };
+		3AD802121CC81BB7008651ED /* BondExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AD802111CC81BB7008651ED /* BondExtensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -73,6 +75,8 @@
 		1A5E48091C1F2697000B9362 /* TableViewBindingHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TableViewBindingHelper.swift; path = ReactiveCocoa/TableViewBindingHelper.swift; sourceTree = "<group>"; };
 		1AF69D561C1B055400DF2129 /* GithubRKViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GithubRKViewModel.swift; path = ReactiveKit/GithubRKViewModel.swift; sourceTree = "<group>"; };
 		1AF69D961C1B111300DF2129 /* RKExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RKExtensions.swift; path = ReactiveKit/RKExtensions.swift; sourceTree = "<group>"; };
+		3AD8020F1CC810A9008651ED /* GithubSBViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GithubSBViewModel.swift; path = SwiftBond/GithubSBViewModel.swift; sourceTree = "<group>"; };
+		3AD802111CC81BB7008651ED /* BondExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BondExtensions.swift; sourceTree = "<group>"; };
 		451A938254BD63C5F62283C3 /* Pods-Reactive.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Reactive.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Reactive/Pods-Reactive.debug.xcconfig"; sourceTree = "<group>"; };
 		939A8EF2827CD90E192B9810 /* Pods-Reactive.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Reactive.release.xcconfig"; path = "Pods/Target Support Files/Pods-Reactive/Pods-Reactive.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -134,6 +138,7 @@
 				1A48B6121C19C5560016EED6 /* LaunchScreen.storyboard */,
 				1A48B6151C19C5560016EED6 /* Info.plist */,
 				1A48B6521C19E84D0016EED6 /* Utilities */,
+				3AD8020E1CC8105B008651ED /* SwiftBond */,
 				1AF69D531C1B03C100DF2129 /* ReactiveKit */,
 				1A48B6471C19D4350016EED6 /* ReactiveCocoa */,
 				1A48B6451C19CB5E0016EED6 /* RxSwift */,
@@ -206,6 +211,15 @@
 				1AF69D961C1B111300DF2129 /* RKExtensions.swift */,
 			);
 			name = ReactiveKit;
+			sourceTree = "<group>";
+		};
+		3AD8020E1CC8105B008651ED /* SwiftBond */ = {
+			isa = PBXGroup;
+			children = (
+				3AD8020F1CC810A9008651ED /* GithubSBViewModel.swift */,
+				3AD802111CC81BB7008651ED /* BondExtensions.swift */,
+			);
+			name = SwiftBond;
 			sourceTree = "<group>";
 		};
 		743FB39A8B85F1CC3B29FFD2 /* Pods */ = {
@@ -409,6 +423,7 @@
 			files = (
 				1A48B6491C19D4730016EED6 /* GithubRACViewModel.swift in Sources */,
 				1AF69D971C1B111300DF2129 /* RKExtensions.swift in Sources */,
+				3AD802121CC81BB7008651ED /* BondExtensions.swift in Sources */,
 				1A48B63A1C19C7C60016EED6 /* GithubViewController.swift in Sources */,
 				1AF69D571C1B055400DF2129 /* GithubRKViewModel.swift in Sources */,
 				1A48B60A1C19C5560016EED6 /* AppDelegate.swift in Sources */,
@@ -416,6 +431,7 @@
 				1A48B6441C19CB590016EED6 /* GithubSignupViewModel.swift in Sources */,
 				1A48B64B1C19DAA10016EED6 /* RACErrors.swift in Sources */,
 				1A48B6541C19E8590016EED6 /* Protocols.swift in Sources */,
+				3AD802101CC810A9008651ED /* GithubSBViewModel.swift in Sources */,
 				1A48B6381C19C5BA0016EED6 /* MenuViewController.swift in Sources */,
 				1A48B6431C19CB590016EED6 /* DefaultImplementations.swift in Sources */,
 				1A48B6561C19E8FB0016EED6 /* RACImplementations.swift in Sources */,

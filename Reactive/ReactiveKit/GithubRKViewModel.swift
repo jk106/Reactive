@@ -46,9 +46,9 @@ class GithubRKViewModel {
             p1,p2 in
             return self.validationService.validateRepeatedPassword(p1!, repeatedPassword: p2!)
             }.bindTo(self.validRepeat)
-        self.username.skip(2).flatMap(.Latest){ username in return Stream.sequence([username!])}.flatMap(.Latest){
+        self.username.skip(2).flatMap(.Latest){
             username in
-            self.fetchUsername(username).startWith(ValidationResult.Validating).toStream(recoverWith: ValidationResult.Validating)
+            self.fetchUsername(username!).startWith(ValidationResult.Validating).toStream(recoverWith: ValidationResult.Validating)
         }.bindTo(self.validUsername)
         self.validUsername.combineLatestWith(self.validPassword).combineLatestWith(self.validRepeat)
             .map{

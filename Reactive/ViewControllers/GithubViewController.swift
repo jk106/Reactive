@@ -13,6 +13,7 @@ import RxCocoa
 import ReactiveCocoa
 import ReactiveUIKit
 import ReactiveKit
+import Bond
 import Action
 
 class GithubViewController: UIViewController {
@@ -33,6 +34,8 @@ class GithubViewController: UIViewController {
     var signupAction:ReactiveCocoa.CocoaAction!
     var bindingHelper: TableViewBindingHelper<NSDate>!
     
+    let sbViewModel = GithubSBViewModel(validationService: GitHubRACDefaultValidationService())
+
     @IBOutlet weak var usernameOutlet: UITextField!
     @IBOutlet weak var usernameValidationOutlet: UILabel!
     
@@ -55,7 +58,7 @@ class GithubViewController: UIViewController {
         case 2:
             loadRx()
         case 3:
-            print(self.title)
+            loadBond()
         default:
             loadRK()
         }
@@ -66,6 +69,40 @@ class GithubViewController: UIViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func loadBond()
+    {
+        passwordOutlet.bnd_text.bindTo(sbViewModel.password)
+        sbViewModel.validPassword.bindTo(passwordValidationOutlet.bnd_validationResult)
+        
+        repeatedPasswordOutlet.bnd_text.bindTo(sbViewModel.repeatedPassword)
+        sbViewModel.validRepeat.bindTo(repeatedPasswordValidationOutlet.bnd_validationResult)
+        
+        usernameOutlet.bnd_text.bindTo(sbViewModel.username)
+        sbViewModel.validUsername.bindTo(usernameValidationOutlet.bnd_validationResult)
+        
+        sbViewModel.signupEnabled.observeNew{
+           enabled in
+            self.signupOutlet.enabled = enabled
+            self.signupOutlet.alpha = enabled ? 1.0 : 0.5
+        }
+        
+        sbViewModel.signingIn.bindTo(signingUpOulet.bnd_animating)
+        signupOutlet.bnd_tap.bindTo(sbViewModel.loginTaps)
+        sbViewModel.signedIn.skip(1).observe{
+            result in
+            let message = result ? "Mock: Signed in to GitHub." : "Mock: Sign in to GitHub failed"
+            self.showMessage(message)
+        }
+        sbViewModel.dates.lift().bindTo(tableView){ indexPath, dates, tableView in
+            let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as UITableViewCell
+            let formatter = NSDateFormatter()
+            formatter.dateStyle = NSDateFormatterStyle.LongStyle
+            formatter.timeStyle = .MediumStyle
+            cell.textLabel?.text = formatter.stringFromDate(dates[indexPath.section][indexPath.row])
+            return cell
+        }
     }
     
     func loadRK()
@@ -96,11 +133,10 @@ class GithubViewController: UIViewController {
         }.disposeIn(rkDisposeBag)
         rkViewModel.dates.bindTo(tableView){ indexPath, dates, tableView in
             let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as UITableViewCell
-            let row = indexPath.row
             let formatter = NSDateFormatter()
             formatter.dateStyle = NSDateFormatterStyle.LongStyle
             formatter.timeStyle = .MediumStyle
-            cell.textLabel?.text = formatter.stringFromDate(dates[row])
+            cell.textLabel?.text = formatter.stringFromDate(dates[indexPath.row])
             return cell
         }
     }
