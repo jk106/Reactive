@@ -12,7 +12,7 @@ import Alamofire
 
 class GithubRKViewModel {
     
-    private let validationService: GitHubRACValidationService
+    private let validationService: GitHubValidationService
     
     // inputs
     let username:Property<String?> = Property("")
@@ -34,7 +34,7 @@ class GithubRKViewModel {
     
     var dates = CollectionProperty([NSDate()])
     
-    init(validationService: GitHubRACValidationService) {
+    init(validationService: GitHubValidationService) {
         self.dates.removeLast()
         self.validationService = validationService
         self.password.map{
@@ -115,26 +115,4 @@ class GithubRKViewModel {
             }
         }
     }
-    
-    enum Router: URLRequestConvertible {
-        static let baseURLString = "https://github.com/"
-        
-        case Query (query: String)
-        
-        var URLRequest: NSMutableURLRequest {
-            let result: (path: String, parameters: [String: AnyObject]) = {
-                switch self {
-                case .Query(query: let aQuery):
-                    return (aQuery, [String : AnyObject]())
-                }
-            }()
-            
-            let URL = NSURL(string: Router.baseURLString)
-            let URLRequest = NSMutableURLRequest(URL: URL!.URLByAppendingPathComponent(result.path))
-            let encoding = Alamofire.ParameterEncoding.URL
-            
-            return encoding.encode(URLRequest, parameters: result.parameters).0
-        }
-    }
-    
 }

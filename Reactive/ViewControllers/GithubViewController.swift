@@ -21,12 +21,12 @@ class GithubViewController: UIViewController {
     var library:Int!
     let rxViewModel = GithubSignupViewModel(
         API: GitHubDefaultAPI.sharedAPI,
-        validationService: GitHubDefaultValidationService.sharedValidationService
+        validationService: GitHubRxDefaultValidationService.sharedValidationService
     )
     
-    let racViewModel = GithubRACViewModel(validationService: GitHubRACDefaultValidationService())
+    let racViewModel = GithubRACViewModel(validationService: GitHubDefaultValidationService())
     
-    let rkViewModel = GithubRKViewModel(validationService: GitHubRACDefaultValidationService())
+    let rkViewModel = GithubRKViewModel(validationService: GitHubDefaultValidationService())
     
     var disposeBag = RxSwift.DisposeBag()
     var rkDisposeBag = ReactiveKit.DisposeBag()
@@ -34,7 +34,7 @@ class GithubViewController: UIViewController {
     var signupAction:ReactiveCocoa.CocoaAction!
     var bindingHelper: TableViewBindingHelper<NSDate>!
     
-    let sbViewModel = GithubSBViewModel(validationService: GitHubRACDefaultValidationService())
+    let sbViewModel = GithubSBViewModel(validationService: GitHubDefaultValidationService())
 
     @IBOutlet weak var usernameOutlet: UITextField!
     @IBOutlet weak var usernameValidationOutlet: UILabel!

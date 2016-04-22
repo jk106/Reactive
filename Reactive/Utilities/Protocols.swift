@@ -17,22 +17,18 @@ enum ValidationResult {
     case Failed(message: String)
 }
 
-enum SignupState {
-    case SignedUp(signedUp: Bool)
-}
-
 protocol GitHubAPI {
     func usernameAvailable(username: String) -> Observable<Bool>
     func signup(username: String, password: String) -> Observable<Bool>
 }
 
-protocol GitHubValidationService {
+protocol GitHubRxValidationService {
     func validateUsername(username: String) -> Observable<ValidationResult>
     func validatePassword(password: String) -> ValidationResult
     func validateRepeatedPassword(password: String, repeatedPassword: String) -> ValidationResult
 }
 
-protocol GitHubRACValidationService {
+protocol GitHubValidationService {
     func validatePassword(password: String) -> ValidationResult
     func validateRepeatedPassword(password: String, repeatedPassword: String) -> ValidationResult
 }

@@ -14,7 +14,7 @@ import Action
 class GithubSignupViewModel {
     
     private let API: GitHubAPI
-    private let validationService: GitHubValidationService
+    private let validationService: GitHubRxValidationService
     
     // inputs {
     
@@ -55,7 +55,7 @@ class GithubSignupViewModel {
     
     let dates = Variable([NSDate]())
     
-    init(API: GitHubAPI, validationService: GitHubValidationService) {
+    init(API: GitHubAPI, validationService: GitHubRxValidationService) {
         self.API = API
         self.validationService = validationService
         

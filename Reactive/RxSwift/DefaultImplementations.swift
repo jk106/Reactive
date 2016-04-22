@@ -8,12 +8,12 @@
 
 import Foundation
 import RxSwift
+import Alamofire
 
-
-class GitHubDefaultValidationService: GitHubValidationService {
+class GitHubRxDefaultValidationService: GitHubRxValidationService {
     let API: GitHubAPI
 
-    static let sharedValidationService = GitHubDefaultValidationService(API: GitHubDefaultAPI.sharedAPI)
+    static let sharedValidationService = GitHubRxDefaultValidationService(API: GitHubDefaultAPI.sharedAPI)
 
     init (API: GitHubAPI) {
         self.API = API
@@ -110,5 +110,57 @@ class GitHubDefaultAPI : GitHubAPI {
             .concat(Observable.never())
             .throttle(2, scheduler: MainScheduler.instance)
             .take(1)
+    }
+}
+
+class GitHubDefaultValidationService: GitHubValidationService {
+    
+    let minPasswordCount = 5
+    
+    func validatePassword(password: String) -> ValidationResult {
+        let numberOfCharacters = password.characters.count
+        if numberOfCharacters == 0 {
+            return .Empty
+        }
+        
+        if numberOfCharacters < minPasswordCount {
+            return .Failed(message: "Password must be at least \(minPasswordCount) characters")
+        }
+        
+        return .OK(message: "Password acceptable")
+    }
+    
+    func validateRepeatedPassword(password: String, repeatedPassword: String) -> ValidationResult {
+        if repeatedPassword.characters.count == 0 {
+            return .Empty
+        }
+        
+        if repeatedPassword == password {
+            return .OK(message: "Password repeated")
+        }
+        else {
+            return .Failed(message: "Password different")
+        }
+    }
+}
+
+enum Router: URLRequestConvertible {
+    static let baseURLString = "https://github.com/"
+    
+    case Query (query: String)
+    
+    var URLRequest: NSMutableURLRequest {
+        let result: (path: String, parameters: [String: AnyObject]) = {
+            switch self {
+            case .Query(query: let aQuery):
+                return (aQuery, [String : AnyObject]())
+            }
+        }()
+        
+        let URL = NSURL(string: Router.baseURLString)
+        let URLRequest = NSMutableURLRequest(URL: URL!.URLByAppendingPathComponent(result.path))
+        let encoding = Alamofire.ParameterEncoding.URL
+        
+        return encoding.encode(URLRequest, parameters: result.parameters).0
     }
 }

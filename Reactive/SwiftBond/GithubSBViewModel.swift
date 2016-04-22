@@ -12,7 +12,7 @@ import Alamofire
 
 class GithubSBViewModel {
     
-    private let validationService: GitHubRACValidationService
+    private let validationService: GitHubValidationService
     
     // inputs
     let username:Observable<String?> = Observable("")
@@ -33,8 +33,10 @@ class GithubSBViewModel {
     let signedIn = Observable(false)
     
     var dates = ObservableArray([NSDate()])
+    
+    var request:Request!
 
-    init(validationService: GitHubRACValidationService) {
+    init(validationService: GitHubValidationService) {
         self.dates.removeLast()
         self.validationService = validationService
         self.password.map{
@@ -84,36 +86,17 @@ class GithubSBViewModel {
     
     func fetchUsername(query: String) {
         self.validUsername.value = ValidationResult.Validating
-        Manager.sharedInstance.request(Router.Query(query: query)).response {
+        self.request?.cancel()
+        self.request = Manager.sharedInstance.request(Router.Query(query: query)).response {
             request, response, data, error in
             if let error = error {
-                self.validUsername.value = ValidationResult.Failed(message: "Unable to connect \(error)")
+                if(error.localizedDescription == "canceled"){
+                    self.validUsername.value = ValidationResult.Failed(message: "Unable to connect \(error)")
+                }
             } else {
                 self.validUsername.value = (response?.statusCode == 404) ? ValidationResult.OK(message: "Username available")
                     : ValidationResult.Failed(message: "Username already taken")
             }
         }
     }
-    
-    enum Router: URLRequestConvertible {
-        static let baseURLString = "https://github.com/"
-        
-        case Query (query: String)
-        
-        var URLRequest: NSMutableURLRequest {
-            let result: (path: String, parameters: [String: AnyObject]) = {
-                switch self {
-                case .Query(query: let aQuery):
-                    return (aQuery, [String : AnyObject]())
-                }
-            }()
-            
-            let URL = NSURL(string: Router.baseURLString)
-            let URLRequest = NSMutableURLRequest(URL: URL!.URLByAppendingPathComponent(result.path))
-            let encoding = Alamofire.ParameterEncoding.URL
-            
-            return encoding.encode(URLRequest, parameters: result.parameters).0
-        }
-    }
-
 }

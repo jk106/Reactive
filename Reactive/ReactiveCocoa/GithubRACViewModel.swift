@@ -12,7 +12,7 @@ import Result
 
 class GithubRACViewModel {
     
-    private let validationService: GitHubRACValidationService
+    private let validationService: GitHubValidationService
     
     // inputs {
     
@@ -75,7 +75,7 @@ class GithubRACViewModel {
     
     let dates = MutableProperty<[NSDate]>([NSDate]())
     
-    init(validationService: GitHubRACValidationService) {
+    init(validationService: GitHubValidationService) {
         self.validationService = validationService
         self.password.producer.map
             {
