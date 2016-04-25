@@ -15,8 +15,8 @@ PODS:
   - ReactiveCocoa/UI (4.1.0):
     - ReactiveCocoa/Core
     - Result (~> 2.0)
-  - ReactiveKit (2.0.0-beta4)
-  - ReactiveUIKit (2.0.0-beta4):
+  - ReactiveKit (2.0.0-beta5)
+  - ReactiveUIKit (2.0.0-beta5):
     - ReactiveKit (~> 2.0.0-beta)
   - Result (2.0.0)
   - RxBlocking (2.0.0):
@@ -30,7 +30,6 @@ DEPENDENCIES:
   - Alamofire
   - Bond
   - ReactiveCocoa (= 4.1.0)
-  - ReactiveKit (~> 2.0.0-beta4)
   - ReactiveUIKit (~> 2.0.0-beta4)
   - RxBlocking (~> 2.0.0-beta)
   - RxCocoa (~> 2.4)
@@ -41,8 +40,8 @@ SPEC CHECKSUMS:
   Alamofire: 369bc67b6f5ac33ded3648d7bd21c5bfb91c2ecc
   Bond: 55903fc67f09e8e49791a657163cabba1d6fb29d
   ReactiveCocoa: d70004d7a366a7b8e87e60ce2347182c77701949
-  ReactiveKit: 4d978a4e63c5590da4848f8b2d632bc9a69fceb6
-  ReactiveUIKit: 62f4dd2112a21c3d75ccb13d3e41dda804cbfc9b
+  ReactiveKit: 59711d1045f510796df390d1e03bfc2e3987283e
+  ReactiveUIKit: 989835c37ad6301f429036dac4f3be87f4cc08f4
   Result: 9e75e1111c774c6ac594e14907b15057053a7959
   RxBlocking: a95a10ed54eb5d116f6c9a87047ff671e181d07b
   RxCocoa: 7d6cd877de99f5640306b3d6cf87f580c1d91b61
