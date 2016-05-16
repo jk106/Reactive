@@ -90,7 +90,7 @@ class GithubViewController: UIViewController {
         
         sbViewModel.signingIn.bindTo(signingUpOulet.bnd_animating)
         signupOutlet.bnd_tap.bindTo(sbViewModel.loginTaps)
-        sbViewModel.signedIn.skip(1).observe{
+        sbViewModel.signedIn.observeNew{
             result in
             let message = result ? "Mock: Signed in to GitHub." : "Mock: Sign in to GitHub failed"
             self.showMessage(message)
